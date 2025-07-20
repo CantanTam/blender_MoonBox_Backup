@@ -24,6 +24,16 @@ class BA_OT_preference(bpy.types.AddonPreferences):
         default='OVERWRITE',
 )
     
+    button_menu_position: bpy.props.EnumProperty(
+        name="",
+        items=[
+            ('CONTEXTMENU',   "右击菜单", "在所有编辑模式的右击菜单中显示"),
+            ('OUTLINERHEADER', "大纲视窗", "大纲视窗头部栏显示"),
+            ('BOTH',"全部显示", "在右击菜单和大纲视窗都显示")
+        ],
+        default='BOTH',
+)
+    
     def draw(self, context):
         layout = self.layout
 
@@ -41,3 +51,10 @@ class BA_OT_preference(bpy.types.AddonPreferences):
 
         col_left.label(text="备份后缀")
         col_right.prop(self, "custom_suffix")
+
+        split = layout.split(factor=0.2)
+        col_left = split.column()
+        col_right = split.column()
+
+        col_left.label(text="按钮位置")
+        col_right.prop(self, "button_menu_position")
