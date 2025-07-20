@@ -13,6 +13,7 @@ class BA_OT_increase_backup(bpy.types.Operator):
 
     def execute(self, context):
         name_infix = context.preferences.addons[ADDON_NAME].preferences.custom_suffix
+        
         bpy.ops.bak.detect_backup_folder()
 
         origin_edit_mode = context.object.mode
