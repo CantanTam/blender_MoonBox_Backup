@@ -19,7 +19,11 @@ from . import load_custom_icons
 from .detect_backup_folder import BA_OT_detect_backup_folder
 from .increase_backup import BA_OT_increase_backup
 from .overwrite_backup import BA_OT_overwrite_backup
-from .show_backup_button import draw_backup_assistant_button
+from .delete_backup import BA_OT_delete_backup
+from .show_button_and_menu import (
+    draw_outliner_header_button,
+    draw_outliner_delete_backup,
+)
 
 def register():
     bpy.utils.register_class(BA_OT_preference)
@@ -27,12 +31,16 @@ def register():
     bpy.utils.register_class(BA_OT_detect_backup_folder)
     bpy.utils.register_class(BA_OT_increase_backup)
     bpy.utils.register_class(BA_OT_overwrite_backup)
-    bpy.types.OUTLINER_HT_header.prepend(draw_backup_assistant_button)
+    bpy.utils.register_class(BA_OT_delete_backup)
+    bpy.types.OUTLINER_HT_header.prepend(draw_outliner_header_button)
+    bpy.types.OUTLINER_MT_object.append(draw_outliner_delete_backup)
 
 
 
 def unregister():
-    bpy.types.OUTLINER_HT_header.remove(draw_backup_assistant_button)
+    bpy.types.OUTLINER_MT_object.remove(draw_outliner_delete_backup)
+    bpy.types.OUTLINER_HT_header.remove(draw_outliner_header_button)
+    bpy.utils.unregister_class(BA_OT_delete_backup)
     bpy.utils.unregister_class(BA_OT_overwrite_backup)
     bpy.utils.unregister_class(BA_OT_increase_backup)
     bpy.utils.unregister_class(BA_OT_detect_backup_folder)
