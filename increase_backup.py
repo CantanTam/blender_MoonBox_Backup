@@ -13,7 +13,7 @@ class BA_OT_increase_backup(bpy.types.Operator):
 
     def execute(self, context):
         name_infix = context.preferences.addons[ADDON_NAME].preferences.custom_suffix
-        
+
         bpy.ops.bak.detect_backup_folder()
 
         origin_edit_mode = context.object.mode
@@ -49,6 +49,5 @@ class BA_OT_increase_backup(bpy.types.Operator):
 
 
         
-        self.report({'INFO'}, "显示“增量备份”")
-        print("Outliner header button clicked!")
+        self.report({'INFO'}, "已经完成增量备份")
         return {'FINISHED'}

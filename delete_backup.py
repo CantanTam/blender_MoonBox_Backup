@@ -30,6 +30,5 @@ class BA_OT_delete_backup(bpy.types.Operator):
             backup_collection.objects.unlink(obj)
             bpy.data.objects.remove(obj)
 
-        self.report({'INFO'}, f"删除{selected_object_name}")
-        print("Outliner header button clicked!")
+        self.report({'INFO'}, f"已经删除{selected_object_name}的所有备份")
         return {'FINISHED'}
