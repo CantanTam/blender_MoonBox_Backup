@@ -4,14 +4,17 @@ from . import ADDON_NAME
 
 def draw_outliner_header_button(self, context):
     layout = self.layout
+    row = layout.row(align=True)
 
     prefs = context.preferences.addons[ADDON_NAME].preferences
 
     if context.area.type == 'OUTLINER':
         if prefs.backup_mode == "OVERWRITE":
-            layout.operator("bak.overwrite_backup", text="", icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id)
+            row.operator("bak.overwrite_backup", text="", icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id)
         elif prefs.backup_mode == "INCREASE":
-            layout.operator("bak.increase_backup", text="", icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
+            row.operator("bak.increase_backup", text="", icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
+        
+        row.popover(panel="bak.backup_setting", text="")
 
 def draw_outliner_delete_backup(self, context):
     layout = self.layout

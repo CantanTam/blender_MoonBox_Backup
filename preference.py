@@ -26,14 +26,18 @@ class BA_OT_preference(bpy.types.AddonPreferences):
     
     def draw(self, context):
         layout = self.layout
-        split = layout.split(factor=0.2)
 
+        split = layout.split(factor=0.2)
         col_left = split.column()
         col_left.alignment = 'LEFT'
         col_right = split.column()
 
+        col_left.label(text="备份模式")
+        col_right.prop(self, "backup_mode", text="abc", expand=True)
+
+        split = layout.split(factor=0.2)
+        col_left = split.column()
+        col_right = split.column()
+
         col_left.label(text="备份后缀")
         col_right.prop(self, "custom_suffix")
-
-        col_left.label(text="备份模式")
-        col_right.prop(self, "backup_mode")
