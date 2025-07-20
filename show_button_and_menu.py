@@ -30,7 +30,7 @@ def draw_shortcut_backup(self, context):
 
     layout.separator()
     layout.operator(
-        "bak.shortcut_backup", 
+        "view3d.shortcut_backup", 
         text="覆盖备份" if prefs.backup_mode == "OVERWRITE" else "增量备份", 
         icon_value=(
             load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id
