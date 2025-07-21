@@ -5,7 +5,7 @@ from . import ADDON_NAME
 # 强制 custom_suffix 只能使用字母或者数字
 def not_empty_suffix(self, context):
     s = self.custom_suffix.replace(" ", "")
-    if not s or not re.fullmatch(r'[A-Za-z0-9_-]+', s):
+    if not s or not re.fullmatch(r'[A-Za-z0-9]+', s):
         self.custom_suffix = "BAK"
     else:
         self.custom_suffix = s
@@ -15,7 +15,7 @@ class BA_OT_preference(bpy.types.AddonPreferences):
 
     custom_suffix:bpy.props.StringProperty(
         name="",
-        description="备份对象名称的后缀名，只能使用字母、数字、_、- 这四种符号,空格会被清除",
+        description="备份对象名称的后缀名，只能使用大小写字母或数字,空格会被清除",
         default="BAK",
         update=not_empty_suffix,
     )
@@ -64,7 +64,9 @@ class BA_OT_preference(bpy.types.AddonPreferences):
         col_right = split.column()
 
         col_left.label(text="备份后缀")
-        col_right.prop(self, "custom_suffix")
+        row = col_right.row(align=True)
+        row.prop(self, "custom_suffix", text="")  # 属性不重复 label
+        row.operator("wm.shortcut_backup", text="同步后缀名", icon="FILE_REFRESH")
 
         split = layout.split(factor=0.2)
         col_left = split.column()
