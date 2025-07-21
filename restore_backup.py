@@ -1,6 +1,7 @@
 import bpy
 import re
 from . import ADDON_NAME
+from .func_remove_unlinked import remove_all_unlinked
 
 class BA_OT_restore_backup(bpy.types.Operator):
     bl_idname = "bak.store_backup"
@@ -9,6 +10,8 @@ class BA_OT_restore_backup(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
     
     def execute(self, context):
+        remove_all_unlinked()
+
         restore_object = context.active_object
         restore_object_name = context.active_object.name
 
@@ -31,5 +34,12 @@ class BA_OT_restore_backup(bpy.types.Operator):
         if not bpy.data.objects.get(del_object_name):
             bpy.context.active_object.name = del_object_name
             bpy.context.active_object.data.name = del_object_name
+
+            bpy.data.collections["BACKUP"].objects.unlink(bpy.data.objects.get(del_object_name))
+            bpy.context.scene.collection.objects.link(bpy.data.objects.get(del_object_name))
+
+        bpy.data.collections["BACKUP"].hide_select = True
+        bpy.data.collections["BACKUP"].hide_viewport = True
+        bpy.data.collections["BACKUP"].hide_render = True
 
         return {'FINISHED'}

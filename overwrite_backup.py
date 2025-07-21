@@ -8,7 +8,7 @@ class BA_OT_overwrite_backup(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        return bool(context.selected_objects)
+        return bool(context.selected_objects) and bpy.context.active_object in bpy.context.selected_objects
 
     def execute(self, context):
         bpy.ops.bak.detect_backup_folder()

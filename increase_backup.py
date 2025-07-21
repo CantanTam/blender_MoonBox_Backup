@@ -9,7 +9,7 @@ class BA_OT_increase_backup(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        return bool(context.selected_objects)
+        return bool(context.selected_objects) and bpy.context.active_object in bpy.context.selected_objects
 
     def execute(self, context):
         name_infix = context.preferences.addons[ADDON_NAME].preferences.custom_suffix

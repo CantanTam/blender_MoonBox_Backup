@@ -10,7 +10,7 @@ class BA_OT_shortcut_backup(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        return bpy.context.selected_objects
+        return bool(context.selected_objects) and bpy.context.active_object in bpy.context.selected_objects
     
     def execute(self, context):
         shortcut_backup_mode = context.preferences.addons[ADDON_NAME].preferences.backup_mode

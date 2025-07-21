@@ -45,6 +45,9 @@ def draw_outliner_delete_backup(self, context):
 
     if not any(del_pattern.match(obj.name) for obj in backup_collection.objects):
         return
+    
+    if bpy.context.mode != 'OBJECT':
+        return
 
     layout = self.layout
 
@@ -56,6 +59,9 @@ def draw_outliner_restore_backup(self, context):
         return
 
     if not any(coll.name == "BACKUP" for coll in bpy.context.active_object.users_collection):
+        return
+    
+    if bpy.context.mode != 'OBJECT':
         return
     
     layout = self.layout

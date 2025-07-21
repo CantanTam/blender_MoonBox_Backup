@@ -1,6 +1,6 @@
 import bpy
-from .func_remove_unlinked import remove_all_unlinked
 from . import ADDON_NAME
+from .func_remove_unlinked import remove_all_unlinked
 
 class BA_OT_delete_backup(bpy.types.Operator):
     bl_idname = "bak.delete_backup"
