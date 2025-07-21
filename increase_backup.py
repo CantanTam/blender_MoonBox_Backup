@@ -30,6 +30,8 @@ class BA_OT_increase_backup(bpy.types.Operator):
 
         bpy.ops.object.duplicate()
 
+        bpy.context.active_object.data.name = bpy.context.active_object.name
+
         backup_object = context.active_object
 
         for coll in backup_object.users_collection:
