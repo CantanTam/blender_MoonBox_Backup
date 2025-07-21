@@ -9,19 +9,27 @@ class BA_OT_restore_backup(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
     
     def execute(self, context):
+        restore_object = context.active_object
         restore_object_name = context.active_object.name
 
         restore_suffix = "_" + context.preferences.addons[ADDON_NAME].preferences.custom_suffix + "_"
         
         del_object_name = re.sub(re.escape(restore_suffix) + ".*$", "", restore_object_name)
-        
-        shortcut_backup_mode = context.preferences.addons[ADDON_NAME].preferences.backup_mode
 
-        if shortcut_backup_mode == "OVERWRITE":
-            bpy.ops.bak.overwrite_backup()
-            self.report({'INFO'}, "已经完成覆盖备份")
-        elif shortcut_backup_mode == "INCREASE":
-            bpy.ops.bak.increase_backup()
-            self.report({'INFO'}, "已经完成增量备份")
+        origin_edit_mode = context.object.mode
+        
+        bpy.data.collections["BACKUP"].hide_select = False
+        bpy.data.collections["BACKUP"].hide_viewport = False
+        bpy.data.collections["BACKUP"].hide_render = False
+
+        bpy.ops.object.select_all(action='DESELECT')
+        restore_object.select_set(True)
+        bpy.context.view_layer.objects.active = restore_object
+
+        bpy.ops.object.duplicate()
+
+        if not bpy.data.objects.get(del_object_name):
+            bpy.context.active_object.name = del_object_name
+            bpy.context.active_object.data.name = del_object_name
 
         return {'FINISHED'}

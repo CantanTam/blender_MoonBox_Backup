@@ -29,6 +29,7 @@ from .header_popover_panel import BA_PT_backup_setting
 from .show_button_and_menu import (
     draw_outliner_header_button,
     draw_outliner_delete_backup,
+    draw_outliner_restore_backup,
     draw_shortcut_backup,
 )
 
@@ -68,6 +69,7 @@ def register():
     bpy.utils.register_class(BA_PT_backup_setting)
     bpy.types.OUTLINER_HT_header.prepend(draw_outliner_header_button)
     bpy.types.OUTLINER_MT_object.append(draw_outliner_delete_backup)
+    bpy.types.OUTLINER_MT_object.append(draw_outliner_restore_backup)
     bpy.types.VIEW3D_MT_object_context_menu.append(draw_shortcut_backup)
     bpy.types.VIEW3D_MT_edit_mesh_context_menu.append(draw_shortcut_backup)
     register_keymaps()
@@ -78,6 +80,7 @@ def unregister():
     unregister_keymaps()
     bpy.types.VIEW3D_MT_edit_mesh_context_menu.remove(draw_shortcut_backup)
     bpy.types.VIEW3D_MT_object_context_menu.remove(draw_shortcut_backup)
+    bpy.types.OUTLINER_MT_object.remove(draw_outliner_restore_backup)
     bpy.types.OUTLINER_MT_object.remove(draw_outliner_delete_backup)
     bpy.types.OUTLINER_HT_header.remove(draw_outliner_header_button)
     bpy.utils.unregister_class(BA_PT_backup_setting)

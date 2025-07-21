@@ -51,6 +51,21 @@ def draw_outliner_delete_backup(self, context):
     layout.separator()
     layout.operator("bak.delete_backup", text="删除备份", icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
 
+def draw_outliner_restore_backup(self, context):
+    if not any(coll.name == "BACKUP" for coll in context.scene.collection.children):
+        return
+
+    if not any(coll.name == "BACKUP" for coll in bpy.context.active_object.users_collection):
+        return
+    
+    layout = self.layout
+
+    layout.separator()
+    layout.operator("bak.store_backup", text="恢复备份", icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id)
+
+    
+
+
 
 def draw_shortcut_backup(self, context):
     layout = self.layout
@@ -83,3 +98,4 @@ def draw_shortcut_backup(self, context):
                         if prefs.backup_mode == "OVERWRITE" 
                         else load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id),
                     )
+                
