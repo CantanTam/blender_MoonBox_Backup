@@ -25,10 +25,12 @@ def draw_outliner_header_button(self, context):
         row.popover(panel="bak.backup_setting", text="")
 
 def draw_outliner_delete_backup(self, context):
-    layout = self.layout
+    if (any(coll.name == "BACKUP" for coll in context.scene.collection.children)) \
+        and not any(coll.name == "BACKUP" for coll in context.active_object.users_collection):
+        layout = self.layout
 
-    layout.separator()
-    layout.operator("bak.delete_backup", text="删除备份", icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
+        layout.separator()
+        layout.operator("bak.delete_backup", text="删除备份", icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
 
 
 def draw_shortcut_backup(self, context):
