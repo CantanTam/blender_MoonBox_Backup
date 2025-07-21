@@ -1,4 +1,5 @@
 import bpy
+import re
 import bmesh
 from . import load_custom_icons
 from . import ADDON_NAME
@@ -26,12 +27,29 @@ def draw_outliner_header_button(self, context):
         row.popover(panel="bak.backup_setting", text="")
 
 def draw_outliner_delete_backup(self, context):
-    if (any(coll.name == "BACKUP" for coll in context.scene.collection.children)) \
-        and not any(coll.name == "BACKUP" for coll in context.active_object.users_collection):
-        layout = self.layout
+    if not any(coll.name == "BACKUP" for coll in context.scene.collection.children):
+        return
 
-        layout.separator()
-        layout.operator("bak.delete_backup", text="删除备份", icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
+    if any(coll.name == "BACKUP" for coll in bpy.context.active_object.users_collection):
+        return
+
+    backup_collection = bpy.data.collections.get("BACKUP")
+    if not backup_collection:
+        return
+
+    del_suffix = bpy.context.preferences.addons[ADDON_NAME].preferences.custom_suffix
+
+    del_prefix = f"{bpy.context.active_object.name}_{del_suffix}_"
+
+    del_pattern = re.compile(rf"^{re.escape(del_prefix)}\..+")
+
+    if not any(del_pattern.match(obj.name) for obj in backup_collection.objects):
+        return
+
+    layout = self.layout
+
+    layout.separator()
+    layout.operator("bak.delete_backup", text="删除备份", icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
 
 
 def draw_shortcut_backup(self, context):
