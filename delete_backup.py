@@ -1,26 +1,6 @@
 import bpy
+from .func_remove_unlinked import remove_all_unlinked
 from . import ADDON_NAME
-
-def remove_all_unlinked():
-    for data_block in [
-        bpy.data.meshes,
-        bpy.data.materials,
-        bpy.data.textures,
-        bpy.data.images,
-        bpy.data.curves,
-        bpy.data.objects,
-        bpy.data.lights,
-        bpy.data.cameras,
-        bpy.data.actions,
-        bpy.data.collections,
-        bpy.data.grease_pencils,
-        bpy.data.armatures,
-        bpy.data.texts,
-        bpy.data.node_groups,
-    ]:
-        for datablock in data_block:
-            if datablock.users == 0:
-                data_block.remove(datablock)
 
 class BA_OT_delete_backup(bpy.types.Operator):
     bl_idname = "bak.delete_backup"
