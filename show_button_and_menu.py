@@ -1,4 +1,5 @@
 import bpy
+import bmesh
 from . import load_custom_icons
 from . import ADDON_NAME
 
@@ -34,18 +35,33 @@ def draw_outliner_delete_backup(self, context):
 
 
 def draw_shortcut_backup(self, context):
+    layout = self.layout
+
     prefs = context.preferences.addons[ADDON_NAME].preferences
 
     if prefs.right_click_backup:
+        if bpy.context.mode == 'OBJECT' and bpy.context.selected_objects:
 
-        layout = self.layout
+            layout.separator()
+            layout.operator(
+                "wm.shortcut_backup", 
+                text="覆盖备份" if prefs.backup_mode == "OVERWRITE" else "增量备份", 
+                icon_value=(
+                    load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id
+                    if prefs.backup_mode == "OVERWRITE" 
+                    else load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id),
+                )
+            
+        elif bpy.context.mode == 'EDIT_MESH':
+            bm = bmesh.from_edit_mesh(bpy.context.active_object.data)
+            if any(v.select for v in bm.verts) or any(e.select for e in bm.edges) or any(f.select for f in bm.faces):
 
-        layout.separator()
-        layout.operator(
-            "wm.shortcut_backup", 
-            text="覆盖备份" if prefs.backup_mode == "OVERWRITE" else "增量备份", 
-            icon_value=(
-                load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id
-                if prefs.backup_mode == "OVERWRITE" 
-                else load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id),
-            )
+                layout.separator()
+                layout.operator(
+                    "wm.shortcut_backup", 
+                    text="覆盖备份" if prefs.backup_mode == "OVERWRITE" else "增量备份", 
+                    icon_value=(
+                        load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id
+                        if prefs.backup_mode == "OVERWRITE" 
+                        else load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id),
+                    )

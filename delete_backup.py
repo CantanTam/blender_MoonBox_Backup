@@ -4,8 +4,13 @@ from . import ADDON_NAME
 class BA_OT_delete_backup(bpy.types.Operator):
     bl_idname = "bak.delete_backup"
     bl_label = "删除备份"
-    bl_description = "删除所选对象在BACKUP集合中的所有备份数据"
+    bl_description = "删除备份"
     bl_options = {'REGISTER', 'UNDO'}
+
+    @classmethod
+    def poll(cls, context):    
+        return (any(coll.name == "BACKUP" for coll in context.scene.collection.children)) \
+            and not any(coll.name == "BACKUP" for coll in context.active_object.users_collection)
 
     def execute(self, context):
         name_infix = context.preferences.addons[ADDON_NAME].preferences.custom_suffix
