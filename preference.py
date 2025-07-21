@@ -1,16 +1,21 @@
 import bpy
+import re
 from . import ADDON_NAME
 
+# 强制 custom_suffix 只能使用字母或者数字
 def not_empty_suffix(self, context):
-    if self.custom_suffix.strip() == "":
+    s = self.custom_suffix.replace(" ", "")
+    if not s or not re.fullmatch(r'[A-Za-z0-9_-]+', s):
         self.custom_suffix = "BAK"
+    else:
+        self.custom_suffix = s
 
 class BA_OT_preference(bpy.types.AddonPreferences):
     bl_idname = ADDON_NAME
 
     custom_suffix:bpy.props.StringProperty(
         name="",
-        description="备份对象的名称的后缀名，留空则使用默认值",
+        description="备份对象名称的后缀名，只能使用字母、数字、_、- 这四种符号,空格会被清除",
         default="BAK",
         update=not_empty_suffix,
     )
