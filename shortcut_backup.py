@@ -2,7 +2,7 @@ import bpy
 from . import ADDON_NAME
 
 class BA_OT_shortcut_backup(bpy.types.Operator):
-    bl_idname = "view3d.shortcut_backup"
+    bl_idname = "wm.shortcut_backup"
     # bl_idname 必须使用 'object','view3d','wm' 这样的标准命名方法才能指定快捷键
     bl_label = "快捷键备份"
     bl_description = "快捷键备份"

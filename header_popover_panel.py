@@ -15,8 +15,8 @@ class BA_PT_backup_setting(bpy.types.Panel):
         col_left = split.column()
         col_right = split.column()
 
-        col_left.label(text="备份模式")
-        col_right.prop(prefs, "backup_mode", text="abc", expand=True)
+        layout.label(text="备份模式")
+        layout.prop(prefs, "backup_mode", text="abc", expand=True)
 
         split = layout.split(factor=0.3)
         col_left = split.column()
@@ -29,6 +29,12 @@ class BA_PT_backup_setting(bpy.types.Panel):
         col_left = split.column()
         col_right = split.column()
 
-        col_left.label(text="按钮位置")
-        col_right.prop(prefs, "button_menu_position")
+        col_left.label(text="预览按钮")
+        col_right.prop(prefs, "backup_preview_button")
 
+        split = layout.split(factor=0.3)
+        col_left = split.column()
+        col_right = split.column()
+
+        col_left.label(text="右键备份")
+        col_right.prop(prefs, "right_click_backup")

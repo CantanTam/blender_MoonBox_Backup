@@ -14,6 +14,14 @@ def draw_outliner_header_button(self, context):
         elif prefs.backup_mode == "INCREASE":
             row.operator("bak.increase_backup", text="", icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
         
+        if prefs.backup_preview_button:
+            row.prop(prefs, "backup_preview",
+                    icon_value=(
+                        load_custom_icons.custom_icons["PREVIEW_ON"].icon_id 
+                        if prefs.backup_preview 
+                        else load_custom_icons.custom_icons["PREVIEW_OFF"].icon_id), 
+                    )
+    
         row.popover(panel="bak.backup_setting", text="")
 
 def draw_outliner_delete_backup(self, context):
@@ -24,16 +32,18 @@ def draw_outliner_delete_backup(self, context):
 
 
 def draw_shortcut_backup(self, context):
-    layout = self.layout
-
     prefs = context.preferences.addons[ADDON_NAME].preferences
 
-    layout.separator()
-    layout.operator(
-        "view3d.shortcut_backup", 
-        text="覆盖备份" if prefs.backup_mode == "OVERWRITE" else "增量备份", 
-        icon_value=(
-            load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id
-            if prefs.backup_mode == "OVERWRITE" 
-            else load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id),
-        )
+    if prefs.right_click_backup:
+
+        layout = self.layout
+
+        layout.separator()
+        layout.operator(
+            "wm.shortcut_backup", 
+            text="覆盖备份" if prefs.backup_mode == "OVERWRITE" else "增量备份", 
+            icon_value=(
+                load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id
+                if prefs.backup_mode == "OVERWRITE" 
+                else load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id),
+            )

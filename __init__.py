@@ -14,6 +14,9 @@ bl_info = {
 
 ADDON_NAME = __package__
 
+addon_keymaps = []
+
+
 from .preference import BA_OT_preference
 from . import load_custom_icons
 from .detect_backup_folder import BA_OT_detect_backup_folder
@@ -28,6 +31,30 @@ from .show_button_and_menu import (
     draw_shortcut_backup,
 )
 
+def register_keymaps():
+    wm = bpy.context.window_manager
+    kc = wm.keyconfigs.addon
+    if kc:
+        # View3D 的 keymap
+        km_view3d = kc.keymaps.new(name='3D View', space_type='VIEW_3D')
+        kmi_view3d = km_view3d.keymap_items.new("wm.shortcut_backup", type='A', value='PRESS', ctrl=True, shift=True)
+
+        # Outliner 的 keymap
+        km_outliner = kc.keymaps.new(name='Outliner', space_type='OUTLINER')
+        kmi_outliner = km_outliner.keymap_items.new("wm.shortcut_backup", type='A', value='PRESS', ctrl=True, shift=True)
+
+        # 保存方便注销时移除
+        addon_keymaps.extend([
+            (km_view3d, kmi_view3d),
+            (km_outliner, kmi_outliner),
+        ])
+
+def unregister_keymaps():
+    # 逐一移除快捷键
+    for km, kmi in addon_keymaps:
+        km.keymap_items.remove(kmi)
+    addon_keymaps.clear()
+
 def register():
     bpy.utils.register_class(BA_OT_preference)
     load_custom_icons.load_custom_icons()
@@ -40,10 +67,14 @@ def register():
     bpy.types.OUTLINER_HT_header.prepend(draw_outliner_header_button)
     bpy.types.OUTLINER_MT_object.append(draw_outliner_delete_backup)
     bpy.types.VIEW3D_MT_object_context_menu.append(draw_shortcut_backup)
+    bpy.types.VIEW3D_MT_edit_mesh_context_menu.append(draw_shortcut_backup)
+    register_keymaps()
 
 
 
 def unregister():
+    unregister_keymaps()
+    bpy.types.VIEW3D_MT_edit_mesh_context_menu.remove(draw_shortcut_backup)
     bpy.types.VIEW3D_MT_object_context_menu.remove(draw_shortcut_backup)
     bpy.types.OUTLINER_MT_object.remove(draw_outliner_delete_backup)
     bpy.types.OUTLINER_HT_header.remove(draw_outliner_header_button)

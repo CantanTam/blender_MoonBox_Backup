@@ -21,19 +21,28 @@ class BA_OT_preference(bpy.types.AddonPreferences):
             ('OVERWRITE',   "覆盖备份", "用当前状态覆盖原备份"),
             ('INCREASE', "增量备份", "只保存更改的部分"),
         ],
-        default='OVERWRITE',
+        default='INCREASE',
 )
     
-    button_menu_position: bpy.props.EnumProperty(
+    backup_preview:bpy.props.BoolProperty(
         name="",
-        items=[
-            ('CONTEXTMENU',   "右击菜单", "在所有编辑模式的右击菜单中显示"),
-            ('OUTLINERHEADER', "大纲视窗", "大纲视窗头部栏显示"),
-            ('BOTH',"全部显示", "在右击菜单和大纲视窗都显示")
-        ],
-        default='BOTH',
-)
-    
+        description="实时显示选中备份对象",
+        default=True,
+    )
+
+    backup_preview_button:bpy.props.BoolProperty(
+        name="",
+        description="是否在大纲视窗头部栏显示实时预览按钮",
+        default=True,
+    )
+
+    right_click_backup:bpy.props.BoolProperty(
+        name="",
+        description="开启后，右键菜单会出现备份菜单选项",
+        default=True,
+    )
+
+
     def draw(self, context):
         layout = self.layout
 
@@ -56,5 +65,12 @@ class BA_OT_preference(bpy.types.AddonPreferences):
         col_left = split.column()
         col_right = split.column()
 
-        col_left.label(text="按钮位置")
-        col_right.prop(self, "button_menu_position")
+        col_left.label(text="预览按钮")
+        col_right.prop(self, "backup_preview_button")
+
+        split = layout.split(factor=0.2)
+        col_left = split.column()
+        col_right = split.column()
+
+        col_left.label(text="右键备份")
+        col_right.prop(self, "right_click_backup")
