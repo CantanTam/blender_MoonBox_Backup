@@ -14,8 +14,15 @@ def draw_outliner_header_button(self, context):
         if prefs.backup_mode == "OVERWRITE":
             row.operator("bak.overwrite_backup", text="", icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id)
         elif prefs.backup_mode == "INCREASE":
-            row.operator("bak.increase_backup", text="", icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
+            row.operator("bak.start_backup", text="", icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
         
+        row.prop(prefs, "use_auto_backup",
+                icon_value=(
+                    load_custom_icons.custom_icons["PREVIEW_ON"].icon_id 
+                    if prefs.use_auto_backup 
+                    else load_custom_icons.custom_icons["PREVIEW_OFF"].icon_id), 
+                )
+            
         if prefs.backup_preview_button:
             row.prop(prefs, "backup_preview",
                     icon_value=(

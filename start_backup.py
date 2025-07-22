@@ -3,8 +3,8 @@ import re
 from . import ADDON_NAME
 from .func_remove_unlinked import remove_all_unlinked
 
-class BA_OT_increase_backup(bpy.types.Operator):
-    bl_idname = "bak.increase_backup"
+class BA_OT_start_backup(bpy.types.Operator):
+    bl_idname = "bak.start_backup"
     bl_label = "增量备份"
     bl_description = "增量备份"
     bl_options = {'REGISTER', 'UNDO'}

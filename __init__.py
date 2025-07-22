@@ -1,4 +1,5 @@
 import bpy
+from bpy.app.handlers import persistent
 
 bl_info = {
     "name": "Backup Assistant",
@@ -20,7 +21,8 @@ addon_keymaps = []
 from .preference import BA_OT_preference
 from . import load_custom_icons
 from .detect_backup_folder import BA_OT_detect_backup_folder
-from .increase_backup import BA_OT_increase_backup
+from .start_backup import BA_OT_start_backup
+from .func_auto_backup import auto_backup
 from .overwrite_backup import BA_OT_overwrite_backup
 from .shortcut_backup import BA_OT_shortcut_backup
 from .delete_backup import BA_OT_delete_backup
@@ -57,11 +59,16 @@ def unregister_keymaps():
         km.keymap_items.remove(kmi)
     addon_keymaps.clear()
 
+@persistent
+def auto_backup_on_load(dummy):
+    bpy.app.timers.register(auto_backup, first_interval=20.0)
+
 def register():
     bpy.utils.register_class(BA_OT_preference)
     load_custom_icons.load_custom_icons()
     bpy.utils.register_class(BA_OT_detect_backup_folder)
-    bpy.utils.register_class(BA_OT_increase_backup)
+    bpy.utils.register_class(BA_OT_start_backup)
+    bpy.app.handlers.load_post.append(auto_backup_on_load)
     bpy.utils.register_class(BA_OT_overwrite_backup)
     bpy.utils.register_class(BA_OT_shortcut_backup)
     bpy.utils.register_class(BA_OT_delete_backup)
@@ -88,7 +95,8 @@ def unregister():
     bpy.utils.unregister_class(BA_OT_delete_backup)
     bpy.utils.unregister_class(BA_OT_shortcut_backup)
     bpy.utils.unregister_class(BA_OT_overwrite_backup)
-    bpy.utils.unregister_class(BA_OT_increase_backup)
+    bpy.app.handlers.load_post.remove(auto_backup_on_load)
+    bpy.utils.unregister_class(BA_OT_start_backup)
     bpy.utils.unregister_class(BA_OT_detect_backup_folder)
     load_custom_icons.clear_custom_icons()
     bpy.utils.unregister_class(BA_OT_preference)

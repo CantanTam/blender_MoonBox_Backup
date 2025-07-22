@@ -15,7 +15,7 @@ class BA_OT_overwrite_backup(bpy.types.Operator):
 
         bpy.ops.bak.delete_backup()
 
-        bpy.ops.bak.increase_backup()
+        bpy.ops.bak.start_backup()
         
         self.report({'INFO'}, "已经完成覆盖备份")
         return {'FINISHED'}

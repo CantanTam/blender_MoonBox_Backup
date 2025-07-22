@@ -19,7 +19,7 @@ class BA_OT_shortcut_backup(bpy.types.Operator):
             bpy.ops.bak.overwrite_backup()
             self.report({'INFO'}, "已经完成覆盖备份")
         elif shortcut_backup_mode == "INCREASE":
-            bpy.ops.bak.increase_backup()
+            bpy.ops.bak.start_backup()
             self.report({'INFO'}, "已经完成增量备份")
 
         return {'FINISHED'}

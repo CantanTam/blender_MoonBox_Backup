@@ -57,6 +57,20 @@ class BA_OT_preference(bpy.types.AddonPreferences):
         default=True,
     )
 
+    use_auto_backup:bpy.props.BoolProperty(
+        name="",
+        description="启用自动备份功能",
+        default=False,
+    )
+
+    auto_backup_interval:bpy.props.FloatProperty(
+        name="",
+        description="自动备份的时间间隔，单位为秒",
+        default=20,
+        precision=1,
+        subtype='TIME',
+        
+    )
 
     def draw(self, context):
         layout = self.layout
@@ -98,3 +112,18 @@ class BA_OT_preference(bpy.types.AddonPreferences):
 
         col_left.label(text="副本数量")
         col_right.prop(self, "backup_copies_count")
+
+        split = layout.split(factor=0.2)
+        col_left = split.column()
+        col_right = split.column()
+
+        col_left.label(text="自动备份")
+        col_right.prop(self, "use_auto_backup")
+
+        if self.use_auto_backup:
+            split = layout.split(factor=0.2)
+            col_left = split.column()
+            col_right = split.column()
+
+            col_left.label(text="备份间隔")
+            col_right.prop(self, "auto_backup_interval")
