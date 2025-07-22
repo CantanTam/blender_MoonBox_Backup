@@ -1,6 +1,8 @@
 import bpy
 import re
 from . import ADDON_NAME
+from . import load_custom_icons
+
 
 # 强制 custom_suffix 只能使用字母或者数字
 def not_empty_suffix(self, context):
@@ -66,7 +68,7 @@ class BA_OT_preference(bpy.types.AddonPreferences):
         col_left.label(text="备份后缀")
         row = col_right.row(align=True)
         row.prop(self, "custom_suffix", text="")  # 属性不重复 label
-        row.operator("wm.shortcut_backup", text="同步后缀名", icon="FILE_REFRESH")
+        row.operator("wm.shortcut_backup", text="", icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
 
         split = layout.split(factor=0.2)
         col_left = split.column()
