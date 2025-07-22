@@ -4,7 +4,7 @@ from . import ADDON_NAME
 from .func_remove_unlinked import remove_all_unlinked
 
 class BA_OT_start_backup(bpy.types.Operator):
-    bl_idname = "bak.start_backup"
+    bl_idname = "wm.start_backup"
     bl_label = "增量备份"
     bl_description = "增量备份"
     bl_options = {'REGISTER', 'UNDO'}

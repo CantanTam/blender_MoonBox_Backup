@@ -23,8 +23,6 @@ from . import load_custom_icons
 from .detect_backup_folder import BA_OT_detect_backup_folder
 from .start_backup import BA_OT_start_backup
 from .func_auto_backup import auto_backup
-from .overwrite_backup import BA_OT_overwrite_backup
-from .shortcut_backup import BA_OT_shortcut_backup
 from .delete_backup import BA_OT_delete_backup
 from .restore_backup import BA_OT_restore_backup
 from .header_popover_panel import BA_PT_backup_setting
@@ -32,7 +30,7 @@ from .show_button_and_menu import (
     draw_outliner_header_button,
     draw_outliner_delete_backup,
     draw_outliner_restore_backup,
-    draw_shortcut_backup,
+    draw_start_backup,
 )
 
 def register_keymaps():
@@ -41,11 +39,11 @@ def register_keymaps():
     if kc:
         # View3D 的 keymap
         km_view3d = kc.keymaps.new(name='3D View', space_type='VIEW_3D')
-        kmi_view3d = km_view3d.keymap_items.new("wm.shortcut_backup", type='A', value='PRESS', ctrl=True, shift=True)
+        kmi_view3d = km_view3d.keymap_items.new("wm.start_backup", type='A', value='PRESS', ctrl=True, shift=True)
 
         # Outliner 的 keymap
         km_outliner = kc.keymaps.new(name='Outliner', space_type='OUTLINER')
-        kmi_outliner = km_outliner.keymap_items.new("wm.shortcut_backup", type='A', value='PRESS', ctrl=True, shift=True)
+        kmi_outliner = km_outliner.keymap_items.new("wm.start_backup", type='A', value='PRESS', ctrl=True, shift=True)
 
         # 保存方便注销时移除
         addon_keymaps.extend([
@@ -69,32 +67,28 @@ def register():
     bpy.utils.register_class(BA_OT_detect_backup_folder)
     bpy.utils.register_class(BA_OT_start_backup)
     bpy.app.handlers.load_post.append(auto_backup_on_load)
-    bpy.utils.register_class(BA_OT_overwrite_backup)
-    bpy.utils.register_class(BA_OT_shortcut_backup)
     bpy.utils.register_class(BA_OT_delete_backup)
     bpy.utils.register_class(BA_OT_restore_backup)
     bpy.utils.register_class(BA_PT_backup_setting)
     bpy.types.OUTLINER_HT_header.prepend(draw_outliner_header_button)
     bpy.types.OUTLINER_MT_object.append(draw_outliner_delete_backup)
     bpy.types.OUTLINER_MT_object.append(draw_outliner_restore_backup)
-    bpy.types.VIEW3D_MT_object_context_menu.append(draw_shortcut_backup)
-    bpy.types.VIEW3D_MT_edit_mesh_context_menu.append(draw_shortcut_backup)
+    bpy.types.VIEW3D_MT_object_context_menu.append(draw_start_backup)
+    bpy.types.VIEW3D_MT_edit_mesh_context_menu.append(draw_start_backup)
     register_keymaps()
 
 
 
 def unregister():
     unregister_keymaps()
-    bpy.types.VIEW3D_MT_edit_mesh_context_menu.remove(draw_shortcut_backup)
-    bpy.types.VIEW3D_MT_object_context_menu.remove(draw_shortcut_backup)
+    bpy.types.VIEW3D_MT_edit_mesh_context_menu.remove(draw_start_backup)
+    bpy.types.VIEW3D_MT_object_context_menu.remove(draw_start_backup)
     bpy.types.OUTLINER_MT_object.remove(draw_outliner_restore_backup)
     bpy.types.OUTLINER_MT_object.remove(draw_outliner_delete_backup)
     bpy.types.OUTLINER_HT_header.remove(draw_outliner_header_button)
     bpy.utils.unregister_class(BA_PT_backup_setting)
     bpy.utils.unregister_class(BA_OT_restore_backup)
     bpy.utils.unregister_class(BA_OT_delete_backup)
-    bpy.utils.unregister_class(BA_OT_shortcut_backup)
-    bpy.utils.unregister_class(BA_OT_overwrite_backup)
     bpy.app.handlers.load_post.remove(auto_backup_on_load)
     bpy.utils.unregister_class(BA_OT_start_backup)
     bpy.utils.unregister_class(BA_OT_detect_backup_folder)

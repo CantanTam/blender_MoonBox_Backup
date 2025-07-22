@@ -57,6 +57,12 @@ class BA_OT_preference(bpy.types.AddonPreferences):
         default=True,
     )
 
+    show_auto_backup:bpy.props.BoolProperty(
+        name="",
+        description="在大纲视窗头部栏显示自动备份按钮",
+        default=True,
+    )
+
     use_auto_backup:bpy.props.BoolProperty(
         name="",
         description="启用自动备份功能",
@@ -80,8 +86,16 @@ class BA_OT_preference(bpy.types.AddonPreferences):
         col_left.alignment = 'LEFT'
         col_right = split.column()
 
-        col_left.label(text="备份模式")
-        col_right.prop(self, "backup_mode", text="abc", expand=True)
+        col_left.label(text="自动备份")
+        col_right.prop(self, "use_auto_backup")
+
+        if self.use_auto_backup:
+            split = layout.split(factor=0.2)
+            col_left = split.column()
+            col_right = split.column()
+
+            col_left.label(text="备份间隔")
+            col_right.prop(self, "auto_backup_interval")
 
         split = layout.split(factor=0.2)
         col_left = split.column()
@@ -90,7 +104,7 @@ class BA_OT_preference(bpy.types.AddonPreferences):
         col_left.label(text="备份后缀")
         row = col_right.row(align=True)
         row.prop(self, "custom_suffix", text="")  # 属性不重复 label
-        row.operator("wm.shortcut_backup", text="", icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
+        row.operator("wm.start_backup", text="", icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
 
         split = layout.split(factor=0.2)
         col_left = split.column()
@@ -117,13 +131,3 @@ class BA_OT_preference(bpy.types.AddonPreferences):
         col_left = split.column()
         col_right = split.column()
 
-        col_left.label(text="自动备份")
-        col_right.prop(self, "use_auto_backup")
-
-        if self.use_auto_backup:
-            split = layout.split(factor=0.2)
-            col_left = split.column()
-            col_right = split.column()
-
-            col_left.label(text="备份间隔")
-            col_right.prop(self, "auto_backup_interval")

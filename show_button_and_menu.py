@@ -11,17 +11,10 @@ def draw_outliner_header_button(self, context):
     prefs = context.preferences.addons[ADDON_NAME].preferences
 
     if context.area.type == 'OUTLINER':
-        if prefs.backup_mode == "OVERWRITE":
-            row.operator("bak.overwrite_backup", text="", icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id)
-        elif prefs.backup_mode == "INCREASE":
-            row.operator("bak.start_backup", text="", icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
-        
-        row.prop(prefs, "use_auto_backup",
-                icon_value=(
-                    load_custom_icons.custom_icons["PREVIEW_ON"].icon_id 
-                    if prefs.use_auto_backup 
-                    else load_custom_icons.custom_icons["PREVIEW_OFF"].icon_id), 
-                )
+        row.operator("wm.start_backup", text="", icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id)
+
+        if prefs.show_auto_backup:
+            row.prop(prefs, "use_auto_backup",icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
             
         if prefs.backup_preview_button:
             row.prop(prefs, "backup_preview",
@@ -82,23 +75,23 @@ def draw_outliner_restore_backup(self, context):
 
 
 
-def draw_shortcut_backup(self, context):
+def draw_start_backup(self, context):
     layout = self.layout
 
     prefs = context.preferences.addons[ADDON_NAME].preferences
+
+    backup_object_name = bpy.context.active_object.name
 
     if prefs.right_click_backup:
         if bpy.context.mode == 'OBJECT' and bpy.context.selected_objects:
 
             layout.separator()
             layout.operator(
-                "wm.shortcut_backup", 
-                text="覆盖备份" if prefs.backup_mode == "OVERWRITE" else "增量备份", 
-                icon_value=(
-                    load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id
-                    if prefs.backup_mode == "OVERWRITE" 
-                    else load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id),
-                )
+                "wm.start_backup", 
+                text=f"备份\"{backup_object_name}\"", 
+                icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id,
+                ),
+                
             
         elif bpy.context.mode == 'EDIT_MESH':
             bm = bmesh.from_edit_mesh(bpy.context.active_object.data)
@@ -106,11 +99,8 @@ def draw_shortcut_backup(self, context):
 
                 layout.separator()
                 layout.operator(
-                    "wm.shortcut_backup", 
-                    text="覆盖备份" if prefs.backup_mode == "OVERWRITE" else "增量备份", 
-                    icon_value=(
-                        load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id
-                        if prefs.backup_mode == "OVERWRITE" 
-                        else load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id),
+                    "wm.start_backup", 
+                    text=f"备份\"{backup_object_name}\"", 
+                    icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id,
                     )
                 

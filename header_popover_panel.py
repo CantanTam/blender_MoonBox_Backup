@@ -13,10 +13,20 @@ class BA_PT_backup_setting(bpy.types.Panel):
 
         split = layout.split(factor=0.3)
         col_left = split.column()
+        col_left.alignment = 'LEFT'
         col_right = split.column()
 
-        layout.label(text="备份模式")
-        layout.prop(prefs, "backup_mode", text="abc", expand=True)
+        col_left.label(text="自动备份")
+        col_right.prop(prefs, "show_auto_backup")
+
+        if prefs.show_auto_backup:
+
+            split = layout.split(factor=0.3)
+            col_left = split.column()
+            col_right = split.column()
+
+            col_left.label(text="备份间隔")
+            col_right.prop(prefs, "auto_backup_interval")
 
         split = layout.split(factor=0.3)
         col_left = split.column()
@@ -25,7 +35,7 @@ class BA_PT_backup_setting(bpy.types.Panel):
         col_left.label(text="备份后缀")
         row = col_right.row(align=True)
         row.prop(prefs, "custom_suffix", text="")
-        row.operator("wm.shortcut_backup", text="", icon="FILE_REFRESH")
+        row.operator("wm.start_backup", text="", icon="FILE_REFRESH")
 
         split = layout.split(factor=0.3)
         col_left = split.column()
