@@ -13,6 +13,7 @@ def remove_all_unlinked():
         bpy.data.actions,
         bpy.data.collections,
         bpy.data.grease_pencils,
+        bpy.data.grease_pencils_v3,
         bpy.data.armatures,
         bpy.data.texts,
         bpy.data.node_groups,

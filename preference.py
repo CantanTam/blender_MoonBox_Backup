@@ -22,6 +22,14 @@ class BA_OT_preference(bpy.types.AddonPreferences):
         update=not_empty_suffix,
     )
 
+    backup_copies_count:bpy.props.IntProperty(
+        name="",
+        description="设定保留的最近备份的副本数量，0 为无限次",
+        default=0,
+        min=0,
+        soft_max=5,
+    )
+
     backup_mode: bpy.props.EnumProperty(
         name="",
         items=[
@@ -83,3 +91,10 @@ class BA_OT_preference(bpy.types.AddonPreferences):
 
         col_left.label(text="右键备份")
         col_right.prop(self, "right_click_backup")
+
+        split = layout.split(factor=0.2)
+        col_left = split.column()
+        col_right = split.column()
+
+        col_left.label(text="副本数量")
+        col_right.prop(self, "backup_copies_count")

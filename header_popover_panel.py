@@ -40,3 +40,10 @@ class BA_PT_backup_setting(bpy.types.Panel):
 
         col_left.label(text="右键备份")
         col_right.prop(prefs, "right_click_backup")
+
+        split = layout.split(factor=0.3)
+        col_left = split.column()
+        col_right = split.column()
+
+        col_left.label(text="副本数量")
+        col_right.prop(prefs, "backup_copies_count")

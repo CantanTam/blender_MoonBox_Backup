@@ -9,11 +9,11 @@ class BA_OT_delete_backup(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        name_infix = context.preferences.addons[ADDON_NAME].preferences.custom_suffix
+        backup_object_infix = context.preferences.addons[ADDON_NAME].preferences.custom_suffix
 
         selected_object_name = context.active_object.name
 
-        to_delete_object_name = context.active_object.name + "_" + name_infix + "_"
+        to_delete_object_name = context.active_object.name + "_" + backup_object_infix + "_"
 
         backup_collection = bpy.data.collections["BACKUP"]
 
