@@ -48,11 +48,13 @@ def draw_outliner_delete_backup(self, context):
     
     if bpy.context.mode != 'OBJECT':
         return
+    
+    del_object_name = bpy.context.active_object.name
 
     layout = self.layout
 
     layout.separator()
-    layout.operator("bak.delete_backup", text="删除备份", icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
+    layout.operator("bak.delete_backup", text=f"删除\"{del_object_name}\"的所有备份", icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
 
 def draw_outliner_restore_backup(self, context):
     if not any(coll.name == "BACKUP" for coll in context.scene.collection.children):
