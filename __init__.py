@@ -17,10 +17,14 @@ ADDON_NAME = __package__
 
 addon_keymaps = []
 
-
+from .addon_property import (
+    BA_PG_backup_object,
+    BA_PG_backup_object_list,
+)
 from .preference import BA_OT_preference
 from . import load_custom_icons
 from .detect_backup_folder import BA_OT_detect_backup_folder
+from .list_unlist_to_backup import BA_OT_list_unlist_to_backup
 from .start_backup import BA_OT_start_backup
 from .func_auto_backup import auto_backup
 from .delete_backup import BA_OT_delete_backup
@@ -28,9 +32,10 @@ from .restore_backup import BA_OT_restore_backup
 from .header_popover_panel import BA_PT_backup_setting
 from .show_button_and_menu import (
     draw_outliner_header_button,
+    draw_list_unlist_backup,
+    draw_start_backup,
     draw_outliner_delete_backup,
     draw_outliner_restore_backup,
-    draw_start_backup,
 )
 
 def register_keymaps():
@@ -62,15 +67,20 @@ def auto_backup_on_load(dummy):
     bpy.app.timers.register(auto_backup, first_interval=20.0)
 
 def register():
+    bpy.utils.register_class(BA_PG_backup_object)
+    bpy.utils.register_class(BA_PG_backup_object_list)
+    bpy.types.Scene.addon_backup_objects = bpy.props.PointerProperty(type=BA_PG_backup_object_list)
     bpy.utils.register_class(BA_OT_preference)
     load_custom_icons.load_custom_icons()
     bpy.utils.register_class(BA_OT_detect_backup_folder)
+    bpy.utils.register_class(BA_OT_list_unlist_to_backup)
     bpy.utils.register_class(BA_OT_start_backup)
     bpy.app.handlers.load_post.append(auto_backup_on_load)
     bpy.utils.register_class(BA_OT_delete_backup)
     bpy.utils.register_class(BA_OT_restore_backup)
     bpy.utils.register_class(BA_PT_backup_setting)
     bpy.types.OUTLINER_HT_header.prepend(draw_outliner_header_button)
+    bpy.types.OUTLINER_MT_object.append(draw_list_unlist_backup)
     bpy.types.OUTLINER_MT_object.append(draw_outliner_delete_backup)
     bpy.types.OUTLINER_MT_object.append(draw_outliner_restore_backup)
     bpy.types.VIEW3D_MT_object_context_menu.append(draw_start_backup)
@@ -85,15 +95,20 @@ def unregister():
     bpy.types.VIEW3D_MT_object_context_menu.remove(draw_start_backup)
     bpy.types.OUTLINER_MT_object.remove(draw_outliner_restore_backup)
     bpy.types.OUTLINER_MT_object.remove(draw_outliner_delete_backup)
+    bpy.types.OUTLINER_MT_object.remove(draw_list_unlist_backup)
     bpy.types.OUTLINER_HT_header.remove(draw_outliner_header_button)
     bpy.utils.unregister_class(BA_PT_backup_setting)
     bpy.utils.unregister_class(BA_OT_restore_backup)
     bpy.utils.unregister_class(BA_OT_delete_backup)
     bpy.app.handlers.load_post.remove(auto_backup_on_load)
     bpy.utils.unregister_class(BA_OT_start_backup)
+    bpy.utils.unregister_class(BA_OT_list_unlist_to_backup)
     bpy.utils.unregister_class(BA_OT_detect_backup_folder)
     load_custom_icons.clear_custom_icons()
     bpy.utils.unregister_class(BA_OT_preference)
+    del bpy.types.Scene.addon_backup_objects
+    bpy.utils.unregister_class(BA_PG_backup_object_list)
+    bpy.utils.unregister_class(BA_PG_backup_object)
 
 
 if __name__ == "__main__":

@@ -3,6 +3,7 @@ import re
 import bmesh
 from . import load_custom_icons
 from . import ADDON_NAME
+from .func_detect_backup_statu import object_backup_status
 
 def draw_outliner_header_button(self, context):
     layout = self.layout
@@ -25,6 +26,50 @@ def draw_outliner_header_button(self, context):
                     )
     
         row.popover(panel="bak.backup_setting", text="")
+
+def draw_list_unlist_backup(self, context):    
+    list_unlist_object_name = bpy.context.active_object.name
+
+    layout = self.layout
+    layout.separator()
+    layout.operator(
+        "bak.list_unlist_to_backup",
+        text=f"\"{list_unlist_object_name}\"移出备份列表" if object_backup_status() else f"\"{list_unlist_object_name}\"移入备份列表" ,
+        icon="RESTRICT_SELECT_ON" if object_backup_status() else "RESTRICT_SELECT_OFF",
+        )
+
+
+def draw_start_backup(self, context):
+    if not object_backup_status():
+        return
+
+    layout = self.layout
+
+    prefs = context.preferences.addons[ADDON_NAME].preferences
+
+    backup_object_name = bpy.context.active_object.name
+
+    if prefs.right_click_backup:
+        if bpy.context.mode == 'OBJECT' and bpy.context.selected_objects:
+
+            layout.separator()
+            layout.operator(
+                "wm.start_backup", 
+                text=f"备份\"{backup_object_name}\"", 
+                icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id,
+                ),
+                
+            
+        elif bpy.context.mode == 'EDIT_MESH':
+            bm = bmesh.from_edit_mesh(bpy.context.active_object.data)
+            if any(v.select for v in bm.verts) or any(e.select for e in bm.edges) or any(f.select for f in bm.faces):
+
+                layout.separator()
+                layout.operator(
+                    "wm.start_backup", 
+                    text=f"备份\"{backup_object_name}\"", 
+                    icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id,
+                    )
 
 def draw_outliner_delete_backup(self, context):
     if not any(coll.name == "BACKUP" for coll in context.scene.collection.children):
@@ -75,32 +120,5 @@ def draw_outliner_restore_backup(self, context):
 
 
 
-def draw_start_backup(self, context):
-    layout = self.layout
 
-    prefs = context.preferences.addons[ADDON_NAME].preferences
-
-    backup_object_name = bpy.context.active_object.name
-
-    if prefs.right_click_backup:
-        if bpy.context.mode == 'OBJECT' and bpy.context.selected_objects:
-
-            layout.separator()
-            layout.operator(
-                "wm.start_backup", 
-                text=f"备份\"{backup_object_name}\"", 
-                icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id,
-                ),
-                
-            
-        elif bpy.context.mode == 'EDIT_MESH':
-            bm = bmesh.from_edit_mesh(bpy.context.active_object.data)
-            if any(v.select for v in bm.verts) or any(e.select for e in bm.edges) or any(f.select for f in bm.faces):
-
-                layout.separator()
-                layout.operator(
-                    "wm.start_backup", 
-                    text=f"备份\"{backup_object_name}\"", 
-                    icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id,
-                    )
                 

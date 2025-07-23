@@ -2,16 +2,17 @@ import bpy
 import re
 from . import ADDON_NAME
 from .func_remove_unlinked import remove_all_unlinked
+from .func_detect_backup_statu import object_backup_status
 
 class BA_OT_start_backup(bpy.types.Operator):
     bl_idname = "wm.start_backup"
-    bl_label = "增量备份"
-    bl_description = "增量备份"
+    bl_label = "启动备份"
+    bl_description = "启动备份"
     bl_options = {'REGISTER', 'UNDO'}
 
     @classmethod
     def poll(cls, context):
-        return bool(context.selected_objects) and bpy.context.active_object in bpy.context.selected_objects
+        return object_backup_status() and bool(context.selected_objects) and bpy.context.active_object in bpy.context.selected_objects
 
     def execute(self, context):
         prefs = context.preferences.addons[ADDON_NAME].preferences
