@@ -20,6 +20,8 @@ addon_keymaps = []
 from .addon_property import (
     BA_PG_backup_object,
     BA_PG_backup_object_list,
+    BA_PG_change_statu,
+    BA_PG_change_statu_list,
 )
 from .preference import BA_OT_preference
 from . import load_custom_icons
@@ -70,6 +72,9 @@ def register():
     bpy.utils.register_class(BA_PG_backup_object)
     bpy.utils.register_class(BA_PG_backup_object_list)
     bpy.types.Scene.addon_backup_objects = bpy.props.PointerProperty(type=BA_PG_backup_object_list)
+    bpy.utils.register_class(BA_PG_change_statu)
+    bpy.utils.register_class(BA_PG_change_statu_list)
+    bpy.types.Scene.addon_change_statu = bpy.props.PointerProperty(type=BA_PG_change_statu_list)
     bpy.utils.register_class(BA_OT_preference)
     load_custom_icons.load_custom_icons()
     bpy.utils.register_class(BA_OT_detect_backup_folder)
@@ -106,6 +111,9 @@ def unregister():
     bpy.utils.unregister_class(BA_OT_detect_backup_folder)
     load_custom_icons.clear_custom_icons()
     bpy.utils.unregister_class(BA_OT_preference)
+    del bpy.types.Scene.addon_change_statu
+    bpy.utils.unregister_class(BA_PG_change_statu_list)
+    bpy.utils.unregister_class(BA_PG_change_statu)
     del bpy.types.Scene.addon_backup_objects
     bpy.utils.unregister_class(BA_PG_backup_object_list)
     bpy.utils.unregister_class(BA_PG_backup_object)
