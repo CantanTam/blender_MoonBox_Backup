@@ -1,16 +1,11 @@
 import bpy
 
 class BA_PG_backup_object(bpy.types.PropertyGroup):
-    backup_object: bpy.props.StringProperty()
+    # 记录需要备份的 object 名称
+    backup_object_name: bpy.props.StringProperty(default="")
+    # 用于存储编辑变化状态
+    backup_transform_hash: bpy.props.StringProperty(default="")
+    backup_modifier_hash: bpy.props.StringProperty(default="")
 
 class BA_PG_backup_object_list(bpy.types.PropertyGroup):
     backup_object_list: bpy.props.CollectionProperty(type=BA_PG_backup_object)
-
-# 用于检测编辑对象是否已经发生的检测项
-class BA_PG_change_statu(bpy.types.PropertyGroup):
-    transform_statu_hash: bpy.props.StringProperty(default="")
-    modifier_statu_hash: bpy.props.StringProperty(default="")
-
-class BA_PG_change_statu_list(bpy.types.PropertyGroup):
-    change_statu_list: bpy.props.CollectionProperty(type=BA_PG_change_statu)
-

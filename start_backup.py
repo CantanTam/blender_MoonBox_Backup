@@ -3,6 +3,7 @@ import re
 from . import ADDON_NAME
 from .func_remove_unlinked import remove_all_unlinked
 from .func_detect_backup_statu import object_backup_status
+from .func_detect_change import is_edit_change
 
 class BA_OT_start_backup(bpy.types.Operator):
     bl_idname = "wm.start_backup"
@@ -12,9 +13,13 @@ class BA_OT_start_backup(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        return object_backup_status() and bool(context.selected_objects) and bpy.context.active_object in bpy.context.selected_objects
+        return bool(context.selected_objects) and bpy.context.active_object in bpy.context.selected_objects and object_backup_status()
 
     def execute(self, context):
+        # 函数含有写操作，而 poll 只允许不非写操作的判定，所以放到主 execute 进行操作
+        if not is_edit_change():
+            return {'FINISHED'}
+
         prefs = context.preferences.addons[ADDON_NAME].preferences
         backup_object_infix = prefs.custom_suffix
 
