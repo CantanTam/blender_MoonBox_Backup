@@ -1,8 +1,8 @@
 import bpy
-#from .addon_property import BA_PG_backup_object,BA_PG_backup_object_list
+#from .addon_property import BA_PG_object_edit_record,BA_PG_object_edit_record_list
 
 def object_backup_status():
-    detect_object_backup_list = bpy.context.scene.addon_backup_objects
+    detect_object_backup_list = bpy.context.scene.addon_object_edit_record
 
     selected_object_name = bpy.context.active_object.name
 

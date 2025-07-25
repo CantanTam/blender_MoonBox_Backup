@@ -9,11 +9,11 @@ class BA_OT_list_unlist_to_backup(bpy.types.Operator):
 
     def execute(self, context):
         if not object_backup_status():
-            new_backup_object = bpy.context.scene.addon_backup_objects.backup_object_list.add()
+            new_backup_object = bpy.context.scene.addon_object_edit_record.backup_object_list.add()
             new_backup_object.backup_object_name = bpy.context.active_object.name
 
         else:
-            backup_object_list = bpy.context.scene.addon_backup_objects.backup_object_list
+            backup_object_list = bpy.context.scene.addon_object_edit_record.backup_object_list
             object_to_unlist = bpy.context.active_object.name
 
             for i, item in enumerate(backup_object_list):

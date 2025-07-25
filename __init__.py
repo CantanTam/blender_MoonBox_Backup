@@ -1,4 +1,5 @@
 import bpy
+import os
 from bpy.app.handlers import persistent
 
 bl_info = {
@@ -13,13 +14,17 @@ bl_info = {
     "support": "COMMUNITY"
 }
 
-ADDON_NAME = __package__
+ADDON_NAME = os.path.basename(os.path.dirname(__file__))
 
 addon_keymaps = []
 
 from .addon_property import (
-    BA_PG_backup_object,
-    BA_PG_backup_object_list,
+    BA_PG_object_edit_record,
+    BA_PG_object_edit_record_list,
+    BA_PG_origin_object,
+    BA_PG_origin_object_list,
+    BA_PG_copy_object,
+    BA_PG_copy_object_list,
 )
 from .preference import BA_OT_preference
 from . import load_custom_icons
@@ -27,8 +32,10 @@ from .detect_backup_folder import BA_OT_detect_backup_folder
 from .list_unlist_to_backup import BA_OT_list_unlist_to_backup
 from .start_backup import BA_OT_start_backup
 from .func_auto_backup import auto_backup
+from .func_rename_add_delete import detect_rename_add_delete
 from .delete_backup import BA_OT_delete_backup
 from .restore_backup import BA_OT_restore_backup
+from .preview_backup import BA_OT_preview_backup
 from .header_popover_panel import BA_PT_backup_setting
 from .show_button_and_menu import (
     draw_outliner_header_button,
@@ -50,10 +57,14 @@ def register_keymaps():
         km_outliner = kc.keymaps.new(name='Outliner', space_type='OUTLINER')
         kmi_outliner = km_outliner.keymap_items.new("wm.start_backup", type='A', value='PRESS', ctrl=True, shift=True)
 
+        km_preview = kc.keymaps.new(name='Outliner', space_type='OUTLINER')
+        kmi_preview = km_preview.keymap_items.new("wm.preview_backup", type='LEFTMOUSE', value='PRESS', ctrl=True)
+
         # 保存方便注销时移除
         addon_keymaps.extend([
             (km_view3d, kmi_view3d),
             (km_outliner, kmi_outliner),
+            (km_preview, kmi_preview),
         ])
 
 def unregister_keymaps():
@@ -66,18 +77,30 @@ def unregister_keymaps():
 def auto_backup_on_load(dummy):
     bpy.app.timers.register(auto_backup, first_interval=20.0)
 
+@persistent
+def detect_rename_add_delete_on_load(dummy):
+    bpy.app.timers.register(detect_rename_add_delete, first_interval=2)
+
 def register():
-    bpy.utils.register_class(BA_PG_backup_object)
-    bpy.utils.register_class(BA_PG_backup_object_list)
-    bpy.types.Scene.addon_backup_objects = bpy.props.PointerProperty(type=BA_PG_backup_object_list)
+    bpy.utils.register_class(BA_PG_origin_object)
+    bpy.utils.register_class(BA_PG_origin_object_list)
+    bpy.utils.register_class(BA_PG_copy_object)
+    bpy.utils.register_class(BA_PG_copy_object_list)
+    bpy.utils.register_class(BA_PG_object_edit_record)
+    bpy.utils.register_class(BA_PG_object_edit_record_list)
+    bpy.types.Scene.addon_origin_object = bpy.props.PointerProperty(type=BA_PG_origin_object_list)
+    bpy.types.Scene.addon_copy_object = bpy.props.PointerProperty(type=BA_PG_copy_object_list)
+    bpy.types.Scene.addon_object_edit_record = bpy.props.PointerProperty(type=BA_PG_object_edit_record_list)
     bpy.utils.register_class(BA_OT_preference)
     load_custom_icons.load_custom_icons()
     bpy.utils.register_class(BA_OT_detect_backup_folder)
     bpy.utils.register_class(BA_OT_list_unlist_to_backup)
     bpy.utils.register_class(BA_OT_start_backup)
     bpy.app.handlers.load_post.append(auto_backup_on_load)
+    bpy.app.handlers.load_post.append(detect_rename_add_delete_on_load)
     bpy.utils.register_class(BA_OT_delete_backup)
     bpy.utils.register_class(BA_OT_restore_backup)
+    bpy.utils.register_class(BA_OT_preview_backup)
     bpy.utils.register_class(BA_PT_backup_setting)
     bpy.types.OUTLINER_HT_header.prepend(draw_outliner_header_button)
     bpy.types.OUTLINER_MT_object.append(draw_list_unlist_backup)
@@ -98,17 +121,25 @@ def unregister():
     bpy.types.OUTLINER_MT_object.remove(draw_list_unlist_backup)
     bpy.types.OUTLINER_HT_header.remove(draw_outliner_header_button)
     bpy.utils.unregister_class(BA_PT_backup_setting)
+    bpy.utils.unregister_class(BA_OT_preview_backup)
     bpy.utils.unregister_class(BA_OT_restore_backup)
     bpy.utils.unregister_class(BA_OT_delete_backup)
+    bpy.app.handlers.load_post.remove(detect_rename_add_delete_on_load)
     bpy.app.handlers.load_post.remove(auto_backup_on_load)
     bpy.utils.unregister_class(BA_OT_start_backup)
     bpy.utils.unregister_class(BA_OT_list_unlist_to_backup)
     bpy.utils.unregister_class(BA_OT_detect_backup_folder)
     load_custom_icons.clear_custom_icons()
     bpy.utils.unregister_class(BA_OT_preference)
-    del bpy.types.Scene.addon_change_statu
-    bpy.utils.unregister_class(BA_PG_backup_object_list)
-    bpy.utils.unregister_class(BA_PG_backup_object)
+    del bpy.types.Scene.addon_origin_object
+    del bpy.types.Scene.addon_copy_object
+    del bpy.types.Scene.addon_object_edit_record
+    bpy.utils.unregister_class(BA_PG_object_edit_record_list)
+    bpy.utils.unregister_class(BA_PG_object_edit_record)
+    bpy.utils.unregister_class(BA_PG_copy_object_list)
+    bpy.utils.unregister_class(BA_PG_copy_object)
+    bpy.utils.unregister_class(BA_PG_origin_object_list)
+    bpy.utils.unregister_class(BA_PG_origin_object)
 
 
 if __name__ == "__main__":

@@ -57,3 +57,10 @@ class BA_PT_backup_setting(bpy.types.Panel):
 
         col_left.label(text="副本数量")
         col_right.prop(prefs, "backup_copies_count")
+
+        split = layout.split(factor=0.3)
+        col_left = split.column()
+        col_right = split.column()
+
+        col_left.label(text="检测间隔")
+        col_right.prop(prefs, "detect_rename_interval",icon="ADD")

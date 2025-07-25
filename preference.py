@@ -78,6 +78,16 @@ class BA_OT_preference(bpy.types.AddonPreferences):
         
     )
 
+    detect_rename_interval:bpy.props.FloatProperty(
+        name="",
+        description="后台检测重命名、添加、删除状态变化的时间间隔，单位为秒",
+        default=1.0,
+        min=0.1,
+        max=10,
+        soft_max=2,
+        precision=1,
+    )
+
     def draw(self, context):
         layout = self.layout
 
@@ -130,4 +140,7 @@ class BA_OT_preference(bpy.types.AddonPreferences):
         split = layout.split(factor=0.2)
         col_left = split.column()
         col_right = split.column()
+
+        col_left.label(text="检测间隔")
+        col_right.prop(self, "detect_rename_interval")
 

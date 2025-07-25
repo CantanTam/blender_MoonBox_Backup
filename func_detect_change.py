@@ -1,7 +1,7 @@
 import bpy
 
 def is_edit_change():
-    edit_change_object_list = bpy.context.scene.addon_backup_objects.backup_object_list
+    edit_change_object_list = bpy.context.scene.addon_object_edit_record.backup_object_list
 
     edit_object = bpy.context.active_object
 
@@ -19,12 +19,12 @@ def is_edit_change():
                 return True
             
             # 通过点/线/面各自的值组
-            elif item.backp_vef_hash != str(hash((
+            elif item.backup_vef_hash != str(hash((
                     len(bpy.context.active_object.data.vertices),
                     len(bpy.context.active_object.data.edges),
                     len(bpy.context.active_object.data.polygons),
                     ))):
-                item.backp_vef_hash = str(hash((
+                item.backup_vef_hash = str(hash((
                     len(bpy.context.active_object.data.vertices),
                     len(bpy.context.active_object.data.edges),
                     len(bpy.context.active_object.data.polygons),
@@ -35,6 +35,3 @@ def is_edit_change():
                 return False
             
 
-
-
-            
