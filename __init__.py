@@ -30,7 +30,10 @@ from .addon_property import (
 from .preference import BA_OT_preference
 from . import load_custom_icons
 from .detect_backup_folder import BA_OT_detect_backup_folder
-from .list_unlist_to_backup import BA_OT_list_unlist_to_backup
+from .list_unlist_backup import (
+    BA_OT_list_to_backup,
+    BA_OT_unlist_from_backup,
+)
 from .start_backup import BA_OT_start_backup
 from .func_auto_backup import auto_backup
 from .func_rename_add_delete import detect_rename_add_delete
@@ -97,7 +100,8 @@ def register():
     bpy.utils.register_class(BA_OT_preference)
     load_custom_icons.load_custom_icons()
     bpy.utils.register_class(BA_OT_detect_backup_folder)
-    bpy.utils.register_class(BA_OT_list_unlist_to_backup)
+    bpy.utils.register_class(BA_OT_list_to_backup)
+    bpy.utils.register_class(BA_OT_unlist_from_backup)
     bpy.utils.register_class(BA_OT_start_backup)
     bpy.app.handlers.load_post.append(auto_backup_on_load)
     bpy.app.handlers.load_post.append(detect_rename_add_delete_on_load)
@@ -130,7 +134,8 @@ def unregister():
     bpy.app.handlers.load_post.remove(detect_rename_add_delete_on_load)
     bpy.app.handlers.load_post.remove(auto_backup_on_load)
     bpy.utils.unregister_class(BA_OT_start_backup)
-    bpy.utils.unregister_class(BA_OT_list_unlist_to_backup)
+    bpy.utils.unregister_class(BA_OT_unlist_from_backup)
+    bpy.utils.unregister_class(BA_OT_list_to_backup)
     bpy.utils.unregister_class(BA_OT_detect_backup_folder)
     load_custom_icons.clear_custom_icons()
     bpy.utils.unregister_class(BA_OT_preference)

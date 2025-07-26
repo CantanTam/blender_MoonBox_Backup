@@ -1,10 +1,19 @@
 import bpy
-#from .addon_property import BA_PG_object_edit_record,BA_PG_object_edit_record_list
 
-def object_backup_status():
-    detect_object_backup_list = bpy.context.scene.addon_object_edit_record
+def is_in_backup_list():
+    detect_objects = [item.ba_data.use_backup for item in bpy.context.selected_objects]
 
-    selected_object_name = bpy.context.active_object.name
-
-    return selected_object_name in  [item.backup_object_name for item in detect_object_backup_list.backup_object_list]
-
+    if len(detect_objects) == 1 and all(detect_objects): # 单个选项为 True
+        return 1
+    
+    elif len(detect_objects) == 1 and not any(detect_objects): # 单个选项为 False
+        return 2
+    
+    elif len(detect_objects) > 1 and all(detect_objects): # 全部选项为 True
+        return 3 
+    
+    elif len(detect_objects) > 1 and not any(detect_objects): # 全部选项为 False
+        return 4
+    
+    elif len(detect_objects) > 1 and any(detect_objects) and not all(detect_objects): # 选项为 True 混合
+        return 5

@@ -44,4 +44,7 @@ class BA_PG_object_edit_record_list(bpy.types.PropertyGroup):
 
 
 class BA_OB_property(bpy.types.PropertyGroup):
-    origin_uuid: bpy.props.StringProperty(default="")
+    object_type: bpy.props.EnumProperty(items=[('ORIGIN', "原始文件",""), ('DUPLICATE', "备份文件","")])
+    object_uuid: bpy.props.StringProperty(default="")
+
+    use_backup: bpy.props.BoolProperty(default=False)

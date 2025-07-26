@@ -3,7 +3,7 @@ import re
 import bmesh
 from . import load_custom_icons
 from . import ADDON_NAME
-from .func_detect_backup_statu import object_backup_status
+from .func_detect_backup_statu import is_in_backup_list
 
 def draw_outliner_header_button(self, context):
     layout = self.layout
@@ -28,19 +28,36 @@ def draw_outliner_header_button(self, context):
         row.popover(panel="bak.backup_setting", text="")
 
 def draw_list_unlist_backup(self, context):    
-    list_unlist_object_name = bpy.context.active_object.name
+    select_objects = bpy.context.selected_objects
 
-    layout = self.layout
-    layout.separator()
-    layout.operator(
-        "bak.list_unlist_to_backup",
-        text=f"\"{list_unlist_object_name}\"移出备份列表" if object_backup_status() else f"\"{list_unlist_object_name}\"移入备份列表" ,
-        icon="RESTRICT_SELECT_ON" if object_backup_status() else "RESTRICT_SELECT_OFF",
-        )
+    if is_in_backup_list() in {1,3}:
+
+        layout = self.layout
+        layout.separator()
+        layout.operator(
+            "bak.unlist_from_backup",
+            text=f"{select_objects[0].name}移出备份列表" if is_in_backup_list() == 1 else "全部移出备份列表" ,
+            icon="RESTRICT_SELECT_ON",
+            )
+        
+    if is_in_backup_list() in {2,4}:
+        layout = self.layout
+        layout.separator()
+        layout.operator(
+            "bak.list_to_backup",
+            text=f"{select_objects[0].name}移入备份列表" if is_in_backup_list() == 2 else "全部移入备份列表" ,
+            icon="RESTRICT_SELECT_OFF",
+            )
+        
+    if is_in_backup_list() == 5:
+        layout = self.layout
+        layout.separator()
+        layout.operator("bak.list_to_backup",text="全部移入备份列表",icon="RESTRICT_SELECT_OFF")
+        layout.operator("bak.unlist_from_backup",text="全部移出备份列表",icon="RESTRICT_SELECT_ON")
 
 
 def draw_start_backup(self, context):
-    if not object_backup_status():
+    if not is_in_backup_list():
         return
 
     layout = self.layout

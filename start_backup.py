@@ -2,7 +2,7 @@ import bpy
 import re
 from . import ADDON_NAME
 from .func_remove_unlinked import remove_all_unlinked
-from .func_detect_backup_statu import object_backup_status
+from .func_detect_backup_statu import is_in_backup_list
 from .func_detect_change import is_edit_change
 
 class BA_OT_start_backup(bpy.types.Operator):
@@ -13,7 +13,7 @@ class BA_OT_start_backup(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        return bool(context.selected_objects) and bpy.context.active_object in bpy.context.selected_objects and object_backup_status()
+        return bool(context.selected_objects) and bpy.context.active_object in bpy.context.selected_objects and is_in_backup_list()
 
     def execute(self, context):
         # 函数含有写操作，而 poll 只允许不非写操作的判定，所以放到主 execute 进行操作

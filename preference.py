@@ -89,7 +89,7 @@ class BA_OT_preference(bpy.types.AddonPreferences):
     )
 
     color_prop: bpy.props.FloatVectorProperty(
-        name="My Color",
+        name="",
         subtype='COLOR',
         default=(1.0, 0.5, 0.0),
         min=0.0,
