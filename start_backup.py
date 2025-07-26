@@ -1,5 +1,5 @@
 import bpy
-import re
+import re,datetime,random,string
 from . import ADDON_NAME
 from .func_remove_unlinked import remove_all_unlinked
 from .func_detect_backup_statu import is_in_backup_list
@@ -13,12 +13,12 @@ class BA_OT_start_backup(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        return bool(context.selected_objects) and bpy.context.active_object in bpy.context.selected_objects and is_in_backup_list()
+        return is_in_backup_list() == 1
 
     def execute(self, context):
         # 函数含有写操作，而 poll 只允许不非写操作的判定，所以放到主 execute 进行操作
-        if not is_edit_change():
-            return {'FINISHED'}
+        #if not is_edit_change():
+        #   return {'FINISHED'}
 
         prefs = context.preferences.addons[ADDON_NAME].preferences
         backup_object_infix = prefs.custom_suffix
@@ -28,6 +28,9 @@ class BA_OT_start_backup(bpy.types.Operator):
         origin_edit_mode = context.object.mode
         origin_object = context.active_object
 
+        if origin_object.ba_data.object_uuid == "":
+            origin_object.ba_data.object_uuid = datetime.datetime.now().strftime("%Y%m%d%H%M%S") + "_" + ''.join(random.choices(string.ascii_letters, k=6))
+
         temp_object_name = context.active_object.name + "_" + backup_object_infix + "_"
 
         remove_all_unlinked()
@@ -36,6 +39,9 @@ class BA_OT_start_backup(bpy.types.Operator):
         bpy.ops.object.duplicate()
 
         context.active_object.name = temp_object_name
+
+        # 把副本指定为 备份文件 类型
+        context.active_object.ba_data.object_type = "DUPLICATE"
 
         temp_object = context.active_object
 
