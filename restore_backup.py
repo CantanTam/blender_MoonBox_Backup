@@ -67,6 +67,8 @@ class BA_OT_restore_backup(bpy.types.Operator):
             for collections in del_object_collection:
                 collections.objects.link(move_collection_object)
 
+        bpy.context.active_object.ba_data.object_type = "ORIGIN"
+
         bpy.data.collections["BACKUP"].hide_select = True
         bpy.data.collections["BACKUP"].hide_viewport = True
         bpy.data.collections["BACKUP"].hide_render = True

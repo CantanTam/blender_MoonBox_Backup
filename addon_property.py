@@ -49,4 +49,4 @@ class BA_OB_property(bpy.types.PropertyGroup):
     # 复制的时候，直接自带 中缀，防止因为用户修改而且产生恢复过程的错乱
     backup_infix: bpy.props.StringProperty(default="")
     backup_time: bpy.props.StringProperty(default="")
-    use_backup: bpy.props.BoolProperty(default=False)
+    use_backup: bpy.props.BoolProperty(default=True)
