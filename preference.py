@@ -88,6 +88,15 @@ class BA_OT_preference(bpy.types.AddonPreferences):
         precision=1,
     )
 
+    color_prop: bpy.props.FloatVectorProperty(
+        name="My Color",
+        subtype='COLOR',
+        default=(1.0, 0.5, 0.0),
+        min=0.0,
+        max=1.0,
+        description="选择一个颜色"
+    )
+
     def draw(self, context):
         layout = self.layout
 
@@ -144,3 +153,10 @@ class BA_OT_preference(bpy.types.AddonPreferences):
         col_left.label(text="检测间隔")
         col_right.prop(self, "detect_rename_interval")
 
+        split = layout.split(factor=0.2)
+        col_left = split.column()
+        col_right = split.column()
+
+        col_left.label(text="颜色选择")
+        col_right.enabled = True
+        col_right.prop(self, "color_prop")

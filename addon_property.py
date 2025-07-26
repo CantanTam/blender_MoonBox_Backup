@@ -41,3 +41,7 @@ class BA_PG_object_edit_record(bpy.types.PropertyGroup):
 
 class BA_PG_object_edit_record_list(bpy.types.PropertyGroup):
     backup_object_list: bpy.props.CollectionProperty(type=BA_PG_object_edit_record)
+
+
+class BA_OB_property(bpy.types.PropertyGroup):
+    origin_uuid: bpy.props.StringProperty(default="")

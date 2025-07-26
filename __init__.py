@@ -25,6 +25,7 @@ from .addon_property import (
     BA_PG_origin_object_list,
     BA_PG_copy_object,
     BA_PG_copy_object_list,
+    BA_OB_property,
 )
 from .preference import BA_OT_preference
 from . import load_custom_icons
@@ -58,7 +59,7 @@ def register_keymaps():
         kmi_outliner = km_outliner.keymap_items.new("wm.start_backup", type='A', value='PRESS', ctrl=True, shift=True)
 
         km_preview = kc.keymaps.new(name='Outliner', space_type='OUTLINER')
-        kmi_preview = km_preview.keymap_items.new("wm.preview_backup", type='LEFTMOUSE', value='PRESS', ctrl=True)
+        kmi_preview = km_preview.keymap_items.new("wm.preview_backup", type='LEFTMOUSE', value='PRESS', ctrl=True, alt=True)
 
         # 保存方便注销时移除
         addon_keymaps.extend([
@@ -82,6 +83,8 @@ def detect_rename_add_delete_on_load(dummy):
     bpy.app.timers.register(detect_rename_add_delete, first_interval=2)
 
 def register():
+    bpy.utils.register_class(BA_OB_property)
+    bpy.types.Object.ba_data = bpy.props.PointerProperty(type=BA_OB_property)
     bpy.utils.register_class(BA_PG_origin_object)
     bpy.utils.register_class(BA_PG_origin_object_list)
     bpy.utils.register_class(BA_PG_copy_object)
@@ -140,6 +143,8 @@ def unregister():
     bpy.utils.unregister_class(BA_PG_copy_object)
     bpy.utils.unregister_class(BA_PG_origin_object_list)
     bpy.utils.unregister_class(BA_PG_origin_object)
+    del bpy.types.Object.ba_data
+    bpy.utils.unregister_class(BA_OB_property)
 
 
 if __name__ == "__main__":
