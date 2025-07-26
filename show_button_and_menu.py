@@ -89,34 +89,11 @@ def draw_start_backup(self, context):
                     )
 
 def draw_outliner_delete_backup(self, context):
-    if not any(coll.name == "BACKUP" for coll in context.scene.collection.children):
-        return
+    if context.active_object.ba_data.object_type == "ORIGIN" and context.active_object.ba_data.object_uuid != "":
 
-    if any(coll.name == "BACKUP" for coll in bpy.context.active_object.users_collection):
-        return
-
-    backup_collection = bpy.data.collections.get("BACKUP")
-    if not backup_collection:
-        return
-
-    del_suffix = bpy.context.preferences.addons[ADDON_NAME].preferences.custom_suffix
-
-    del_prefix = f"{bpy.context.active_object.name}_{del_suffix}_"
-
-    del_pattern = re.compile(rf"^{re.escape(del_prefix)}\..+")
-
-    if not any(del_pattern.match(obj.name) for obj in backup_collection.objects):
-        return
-    
-    if bpy.context.mode != 'OBJECT':
-        return
-    
-    del_object_name = bpy.context.active_object.name
-
-    layout = self.layout
-
-    layout.separator()
-    layout.operator("bak.delete_backup", text=f"删除\"{del_object_name}\"的所有备份", icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
+        layout = self.layout
+        layout.separator()
+        layout.operator("bak.delete_backup", text=f"删除{context.active_object.name}的所有备份", icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
 
 def draw_outliner_restore_backup(self, context):
     if not any(coll.name == "BACKUP" for coll in context.scene.collection.children):

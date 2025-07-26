@@ -47,4 +47,5 @@ class BA_OB_property(bpy.types.PropertyGroup):
     object_type: bpy.props.EnumProperty(items=[('ORIGIN', "原始文件",""), ('DUPLICATE', "备份文件","")])
     object_uuid: bpy.props.StringProperty(default="")
 
+    backup_time: bpy.props.StringProperty(default="")
     use_backup: bpy.props.BoolProperty(default=False)
