@@ -1,6 +1,7 @@
 import bpy
 import re
 from . import ADDON_NAME
+from .func_remove_unlinked import remove_all_unlinked
 
 # 每次同步之前需要先同步原件/备份件名称，防止错乱
 def sync_origin_backup_name():
@@ -21,14 +22,15 @@ def sync_origin_backup_name():
             current_backup_infix = item3.ba_data.backup_infix
 
             temp_backup_name = item3.name.replace(current_backup_infix,current_name_infix)
-            item3.name = temp_backup_name
 
-            final_backup_name = re.sub(rf'^.*(?={re.escape(current_name_infix)}\.)', current_object_name, item3.name)
+            final_backup_name = re.sub(rf'^.*(?={re.escape(current_name_infix)}\.)', current_object_name, temp_backup_name)
 
             item3.name = final_backup_name
             item3.data.name = final_backup_name    
 
             item3.ba_data.backup_infix = current_name_infix
+
+            remove_all_unlinked()
 
 
 
