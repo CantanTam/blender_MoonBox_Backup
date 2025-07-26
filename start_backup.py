@@ -44,10 +44,11 @@ class BA_OT_start_backup(bpy.types.Operator):
 
         bpy.ops.object.duplicate()
 
-        # 副本指定为 DUPLICATE 类型，并添加备份时间
+        # 副本指定为 DUPLICATE 类型，并添加备份时间，名字中缀
         context.active_object.ba_data.object_type = "DUPLICATE"
         context.active_object.ba_data.backup_time = datetime.datetime.now().strftime("%Y%m%d%H%M")
-
+        context.active_object.ba_data.backup_infix = "_" + backup_object_infix + "_"
+        
         bpy.context.active_object.data.name = bpy.context.active_object.name
 
         backup_object = context.active_object

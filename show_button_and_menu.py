@@ -93,6 +93,7 @@ def draw_outliner_delete_backup(self, context):
 
         layout = self.layout
         layout.separator()
+        layout.operator_context = 'INVOKE_DEFAULT'
         layout.operator("bak.delete_backup", text=f"删除{context.active_object.name}的所有备份", icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
 
 def draw_outliner_restore_backup(self, context):
@@ -110,7 +111,12 @@ def draw_outliner_restore_backup(self, context):
     layout.separator()
     layout.operator("bak.store_backup", text="恢复备份", icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id)
 
-    
+def draw_collection_menu(self, context):
+    layout = self.layout
+    selected = context.selected_ids
+
+    layout.separator()
+    layout.operator("bak.start_backup", text="自定义集合操作")
 
 
 

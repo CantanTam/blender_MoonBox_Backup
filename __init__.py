@@ -47,6 +47,7 @@ from .show_button_and_menu import (
     draw_start_backup,
     draw_outliner_delete_backup,
     draw_outliner_restore_backup,
+    draw_collection_menu,
 )
 
 def register_keymaps():
@@ -117,7 +118,9 @@ def register():
     bpy.types.VIEW3D_MT_edit_mesh_context_menu.append(draw_start_backup)
     register_keymaps()
 
+    bpy.types.OUTLINER_MT_collection_context_menu.append(draw_collection_menu)
 
+    bpy.types.OUTLINER_MT_collection_context_menu.remove(draw_collection_menu)
 
 def unregister():
     unregister_keymaps()
