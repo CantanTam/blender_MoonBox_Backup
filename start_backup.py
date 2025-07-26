@@ -4,6 +4,7 @@ from . import ADDON_NAME
 from .func_remove_unlinked import remove_all_unlinked
 from .func_detect_backup_statu import is_in_backup_list
 from .func_detect_change import is_edit_change
+from .func_sync_name import sync_origin_backup_name
 
 class BA_OT_start_backup(bpy.types.Operator):
     bl_idname = "wm.start_backup"
@@ -19,6 +20,7 @@ class BA_OT_start_backup(bpy.types.Operator):
         # 函数含有写操作，而 poll 只允许不非写操作的判定，所以放到主 execute 进行操作
         #if not is_edit_change():
         #   return {'FINISHED'}
+        sync_origin_backup_name()
 
         prefs = context.preferences.addons[ADDON_NAME].preferences
         backup_object_infix = prefs.custom_suffix

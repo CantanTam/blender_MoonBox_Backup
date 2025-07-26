@@ -36,6 +36,8 @@ class BA_PT_backup_setting(bpy.types.Panel):
         row = col_right.row(align=True)
         row.prop(prefs, "custom_suffix", text="")
         row.operator("wm.start_backup", text="", icon="FILE_REFRESH")
+        row.separator()
+        row.operator("wm.start_backup", text="", icon="FILE_REFRESH")
 
         split = layout.split(factor=0.3)
         col_left = split.column()
@@ -64,3 +66,12 @@ class BA_PT_backup_setting(bpy.types.Panel):
 
         col_left.label(text="检测间隔")
         col_right.prop(prefs, "detect_rename_interval",icon="ADD")
+
+        split = layout.split(factor=0.3)
+        col_left = split.column()
+        col_right = split.column()
+
+        col_left.label(text="备份后缀")
+        row = col_right.row(align=True)
+        row.operator("wm.start_backup", text="", icon="FILE_REFRESH")
+        row.operator("wm.start_backup", text="", icon="FILE_REFRESH")
