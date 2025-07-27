@@ -8,6 +8,8 @@ from .func_detect_change import is_edit_change
 from .func_sync_name import sync_origin_backup_name
 from .func_list_backup import list_all_backup,list_backup_with_origin
 
+from .saving_notice import progress_notice
+
 class BA_OT_start_backup(bpy.types.Operator):
     bl_idname = "wm.start_backup"
     bl_label = "启动备份"
@@ -78,6 +80,9 @@ class BA_OT_start_backup(bpy.types.Operator):
         backup_count = prefs.backup_copies_count
 
         if backup_count == 0:
+            list_backup_with_origin()
+
+            progress_notice("test.png")
             return {'FINISHED'}
         else:
             backup_collection = bpy.data.collections["BACKUP"]
@@ -126,5 +131,7 @@ class BA_OT_start_backup(bpy.types.Operator):
         list_backup_with_origin()
         
         self.report({'INFO'}, "测试指定备份副本数")
+        
+        progress_notice("test.png")
         
         return {'FINISHED'}

@@ -1,5 +1,5 @@
 import bpy
-import re
+import datetime
 from . import ADDON_NAME
 from .func_remove_unlinked import remove_all_unlinked
 from .func_list_backup import list_all_backup,list_backup_with_origin
@@ -43,8 +43,6 @@ class BA_OT_restore_backup(bpy.types.Operator):
         bpy.data.collections["BACKUP"].hide_viewport = False
         bpy.data.collections["BACKUP"].hide_render = False
 
-        
-
         bpy.ops.object.select_all(action='DESELECT')
         context.active_object.select_set(True)
         bpy.context.view_layer.objects.active = context.active_object
@@ -74,14 +72,17 @@ class BA_OT_restore_backup(bpy.types.Operator):
             restore_object.name = self.origin_object_name
             restore_object.data.name = self.origin_object_data_name
 
-            restore_object.select_set(True)
-            bpy.context.view_layer.objects.active = restore_object
-
-
-
-            self.report({'INFO'}, f"{self.origin_object_data_name}★")
         else:
+            # 为防止无原始文件数据名称冲突，这里直接使用日期时间作为数据名称
+            restore_object.data.name = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+            bpy.data.collections["BACKUP"].objects.unlink(restore_object)
+            bpy.context.scene.collection.objects.link(restore_object)
+
+            remove_all_unlinked()
             self.report({'INFO'}, "没有原始文件")
+
+        restore_object.select_set(True)
+        bpy.context.view_layer.objects.active = restore_object
 
         bpy.data.collections["BACKUP"].hide_select = True
         bpy.data.collections["BACKUP"].hide_viewport = True
