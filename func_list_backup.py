@@ -11,11 +11,15 @@ def unlist_all_backup():
     for item in {item for item in bpy.data.objects if item.ba_data.object_type == "DUPLICATE"}:
         if item.name in bpy.data.collections["BACKUP"].objects:
             bpy.data.collections["BACKUP"].objects.unlink(item)
+            item.data.use_fake_user = not item.data.use_fake_user
+
+    set_backup_object_fakeuser()
 
 def list_all_backup():
     for item in {item for item in bpy.data.objects if item.ba_data.object_type == "DUPLICATE"}:
         if item.name not in bpy.data.collections["BACKUP"].objects:
             bpy.data.collections["BACKUP"].objects.link(item)
+            item.data.use_fake_user = not item.data.use_fake_user
 
 def list_backup_with_origin():
     unlist_all_backup()
@@ -24,6 +28,7 @@ def list_backup_with_origin():
         for item in {item for item in bpy.data.objects if item.ba_data.object_type == "DUPLICATE" 
                     and item.ba_data.object_uuid == bpy.context.active_object.ba_data.object_uuid}:
             bpy.data.collections["BACKUP"].objects.link(item)
+            item.data.use_fake_user = not item.data.use_fake_user
 
 def list_backup_without_origin():
     unlist_all_backup()
@@ -31,3 +36,4 @@ def list_backup_without_origin():
 
     for item in {item for item in bpy.data.objects if item.ba_data.object_type == "DUPLICATE" and item.ba_data.object_uuid not in origin_object_uuids}:
         bpy.data.collections["BACKUP"].objects.link(item)
+        item.data.use_fake_user = not item.data.use_fake_user

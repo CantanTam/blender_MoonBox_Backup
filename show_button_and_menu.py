@@ -97,26 +97,12 @@ def draw_outliner_delete_backup(self, context):
         layout.operator("bak.delete_backup", text=f"删除{context.active_object.name}的所有备份", icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
 
 def draw_outliner_restore_backup(self, context):
-    if not any(coll.name == "BACKUP" for coll in context.scene.collection.children):
-        return
-
-    if not any(coll.name == "BACKUP" for coll in bpy.context.active_object.users_collection):
-        return
+    if bpy.context.active_object.ba_data.object_type == "DUPLICATE":
     
-    if bpy.context.mode != 'OBJECT':
-        return
-    
-    layout = self.layout
+        layout = self.layout
+        layout.separator()
+        layout.operator("bak.store_backup", text="恢复备份", icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id)
 
-    layout.separator()
-    layout.operator("bak.store_backup", text="恢复备份", icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id)
-
-def draw_collection_menu(self, context):
-    layout = self.layout
-    selected = context.selected_ids
-
-    layout.separator()
-    layout.operator("bak.start_backup", text="自定义集合操作")
 
 
 

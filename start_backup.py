@@ -1,10 +1,12 @@
 import bpy
 import re,datetime,random,string
 from . import ADDON_NAME
+from .detect_backup_folder import has_backup_folder
 from .func_remove_unlinked import remove_all_unlinked
 from .func_detect_backup_statu import is_in_backup_list
 from .func_detect_change import is_edit_change
 from .func_sync_name import sync_origin_backup_name
+from .func_list_backup import list_all_backup,list_backup_with_origin
 
 class BA_OT_start_backup(bpy.types.Operator):
     bl_idname = "wm.start_backup"
@@ -21,16 +23,14 @@ class BA_OT_start_backup(bpy.types.Operator):
         #if not is_edit_change():
         #   return {'FINISHED'}
     
-        for item in {item for item in bpy.data.objects if item.ba_data.object_type == "DUPLICATE"}:
-            if item.name not in bpy.data.collections["BACKUP"].objects:
-                bpy.data.collections["BACKUP"].objects.link(item)
+        list_all_backup()
 
         sync_origin_backup_name()
 
         prefs = context.preferences.addons[ADDON_NAME].preferences
         backup_object_infix = prefs.custom_suffix
 
-        bpy.ops.bak.detect_backup_folder()
+        has_backup_folder()
 
         origin_edit_mode = context.object.mode
         origin_object = context.active_object
@@ -122,7 +122,9 @@ class BA_OT_start_backup(bpy.types.Operator):
                     print(f"重命名：{obj.name} -> {new_name}")
                     obj.name = new_name
                     obj.data.name = new_name
-
-            self.report({'INFO'}, "测试指定备份副本数")
+        
+        list_backup_with_origin()
+        
+        self.report({'INFO'}, "测试指定备份副本数")
         
         return {'FINISHED'}

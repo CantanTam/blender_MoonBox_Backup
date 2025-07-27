@@ -29,7 +29,6 @@ from .addon_property import (
 )
 from .preference import BA_OT_preference
 from . import load_custom_icons
-from .detect_backup_folder import BA_OT_detect_backup_folder
 from .list_unlist_backup import (
     BA_OT_list_to_backup,
     BA_OT_unlist_from_backup,
@@ -49,7 +48,6 @@ from .show_button_and_menu import (
     draw_start_backup,
     draw_outliner_delete_backup,
     draw_outliner_restore_backup,
-    draw_collection_menu,
 )
 
 def register_keymaps():
@@ -98,7 +96,6 @@ def register():
     bpy.types.Scene.addon_object_edit_record = bpy.props.PointerProperty(type=BA_PG_object_edit_record_list)
     bpy.utils.register_class(BA_OT_preference)
     load_custom_icons.load_custom_icons()
-    bpy.utils.register_class(BA_OT_detect_backup_folder)
     bpy.utils.register_class(BA_OT_list_to_backup)
     bpy.utils.register_class(BA_OT_unlist_from_backup)
     bpy.utils.register_class(BA_OT_start_backup)
@@ -116,9 +113,7 @@ def register():
     bpy.types.VIEW3D_MT_edit_mesh_context_menu.append(draw_start_backup)
     register_keymaps()
 
-    bpy.types.OUTLINER_MT_collection_context_menu.append(draw_collection_menu)
 
-    bpy.types.OUTLINER_MT_collection_context_menu.remove(draw_collection_menu)
 
 def unregister():
     unregister_keymaps()
@@ -137,7 +132,6 @@ def unregister():
     bpy.utils.unregister_class(BA_OT_start_backup)
     bpy.utils.unregister_class(BA_OT_unlist_from_backup)
     bpy.utils.unregister_class(BA_OT_list_to_backup)
-    bpy.utils.unregister_class(BA_OT_detect_backup_folder)
     load_custom_icons.clear_custom_icons()
     bpy.utils.unregister_class(BA_OT_preference)
     del bpy.types.Scene.addon_origin_object
