@@ -1,4 +1,5 @@
 import bpy
+from .func_sync_name import sync_origin_backup_name
 
 # 每次操作完，需要反转 BACKUP 内容备份对象的 use_faker_user 值
 def reverse_backup_fake_user():
@@ -9,6 +10,7 @@ def reverse_backup_fake_user():
             item.use_fake_user = True
 
 def unlist_all_backup():
+    sync_origin_backup_name()
     for item in {item for item in bpy.data.objects if item.ba_data.object_type == "DUPLICATE"}:
         if item.name in bpy.data.collections["BACKUP"].objects:
             bpy.data.collections["BACKUP"].objects.unlink(item)
@@ -17,6 +19,7 @@ def unlist_all_backup():
             
 
 def list_all_backup():
+    sync_origin_backup_name()
     for item in {item for item in bpy.data.objects if item.ba_data.object_type == "DUPLICATE"}:
         if item.name not in bpy.data.collections["BACKUP"].objects:
             bpy.data.collections["BACKUP"].objects.link(item)

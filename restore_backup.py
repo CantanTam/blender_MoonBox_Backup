@@ -2,7 +2,7 @@ import bpy
 import re
 from . import ADDON_NAME
 from .func_remove_unlinked import remove_all_unlinked
-from .func_list_backup import list_all_backup
+from .func_list_backup import list_all_backup,list_backup_with_origin
 
 class BA_OT_restore_backup(bpy.types.Operator):
     bl_idname = "bak.restore_backup"
@@ -12,6 +12,7 @@ class BA_OT_restore_backup(bpy.types.Operator):
     
     has_origin_object = True
     origin_object_name = ""
+    origin_object_data_name = ""
 
     def draw(self, context):
         layout = self.layout
@@ -29,6 +30,7 @@ class BA_OT_restore_backup(bpy.types.Operator):
         if context.active_object.ba_data.object_uuid in origin_name_uuids:
             self.has_origin_object = True
             self.origin_object_name = origin_name_uuids[context.active_object.ba_data.object_uuid]
+            self.origin_object_data_name = bpy.data.objects[self.origin_object_name].data.name
         else:
             self.has_origin_object = False
 
@@ -37,12 +39,56 @@ class BA_OT_restore_backup(bpy.types.Operator):
     def execute(self, context):
         list_all_backup()
 
+        bpy.data.collections["BACKUP"].hide_select = False
+        bpy.data.collections["BACKUP"].hide_viewport = False
+        bpy.data.collections["BACKUP"].hide_render = False
+
+        
+
+        bpy.ops.object.select_all(action='DESELECT')
+        context.active_object.select_set(True)
+        bpy.context.view_layer.objects.active = context.active_object
+        
+        bpy.ops.object.duplicate()
+
         restore_object = context.active_object
 
+        bpy.context.active_object.ba_data.object_type = "ORIGIN"
+        bpy.context.active_object.use_fake_user = False        
+
         if self.has_origin_object:
-            self.report({'INFO'}, f"{self.origin_object_name}")
+            collections = bpy.data.objects[self.origin_object_name].users_collection
+
+            for coll in collections:
+                coll.objects.link(context.active_object)
+
+            bpy.data.collections["BACKUP"].objects.unlink(context.active_object)
+
+            bpy.ops.object.select_all(action='DESELECT')
+            bpy.data.objects[self.origin_object_name].select_set(True)
+            bpy.context.view_layer.objects.active = bpy.data.objects[self.origin_object_name]
+            bpy.ops.object.delete()
+
+            remove_all_unlinked()
+
+            restore_object.name = self.origin_object_name
+            restore_object.data.name = self.origin_object_data_name
+
+            restore_object.select_set(True)
+            bpy.context.view_layer.objects.active = restore_object
+
+
+
+            self.report({'INFO'}, f"{self.origin_object_data_name}★")
         else:
             self.report({'INFO'}, "没有原始文件")
+
+        bpy.data.collections["BACKUP"].hide_select = True
+        bpy.data.collections["BACKUP"].hide_viewport = True
+        bpy.data.collections["BACKUP"].hide_render = True
+
+
+        list_backup_with_origin()
 
         return {'FINISHED'}
 

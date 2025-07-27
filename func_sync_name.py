@@ -2,12 +2,13 @@ import bpy
 import re
 from . import ADDON_NAME
 from .func_remove_unlinked import remove_all_unlinked
-from .func_list_backup import list_all_backup
+#from .func_list_backup import list_all_backup
 
 # 每次同步之前需要先同步原件/备份件名称，防止错乱
 def sync_origin_backup_name():
 
-    list_all_backup()
+    #list_all_backup()
+    remove_all_unlinked()
 
     # 原件当中的名字与 uuid 都是唯一，所以可以它来生成字典给 备份件查找
     origin_name_uuid = {

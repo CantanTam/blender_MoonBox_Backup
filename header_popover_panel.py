@@ -35,7 +35,7 @@ class BA_PT_backup_setting(bpy.types.Panel):
         col_left.label(text="备份后缀")
         row = col_right.row(align=True)
         row.prop(prefs, "custom_suffix", text="")
-        row.operator("wm.start_backup", text="", icon="FILE_REFRESH")
+        row.operator("wm.start_backup", text="这是一段测试文字亖■城邑叶顺井城中", icon="FILE_REFRESH")
         row.separator()
         row.operator("wm.start_backup", text="", icon="FILE_REFRESH")
 

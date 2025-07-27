@@ -1,7 +1,7 @@
 import bpy
 import re,datetime,random,string
 from . import ADDON_NAME
-from .detect_backup_folder import has_backup_folder
+from .func_detect_backup_folder import has_backup_folder
 from .func_remove_unlinked import remove_all_unlinked
 from .func_detect_backup_statu import is_in_backup_list
 from .func_detect_change import is_edit_change
