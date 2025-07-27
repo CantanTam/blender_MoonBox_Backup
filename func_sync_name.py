@@ -18,7 +18,6 @@ def sync_origin_backup_name():
             current_object_name = origin_name_uuid[item3.ba_data.object_uuid]
             current_name_infix = "_" + bpy.context.preferences.addons[ADDON_NAME].preferences.custom_suffix + "_"
 
-            current_backup_name = item3.name
             current_backup_infix = item3.ba_data.backup_infix
 
             temp_backup_name = item3.name.replace(current_backup_infix,current_name_infix)

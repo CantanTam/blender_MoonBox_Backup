@@ -50,3 +50,4 @@ class BA_OB_property(bpy.types.PropertyGroup):
     backup_infix: bpy.props.StringProperty(default="")
     backup_time: bpy.props.StringProperty(default="")
     use_backup: bpy.props.BoolProperty(default=True)
+    show_on_outliner: bpy.props.BoolProperty(default=False)

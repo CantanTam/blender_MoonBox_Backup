@@ -20,6 +20,11 @@ class BA_OT_start_backup(bpy.types.Operator):
         # 函数含有写操作，而 poll 只允许不非写操作的判定，所以放到主 execute 进行操作
         #if not is_edit_change():
         #   return {'FINISHED'}
+    
+        for item in {item for item in bpy.data.objects if item.ba_data.object_type == "DUPLICATE"}:
+            if item.name not in bpy.data.collections["BACKUP"].objects:
+                bpy.data.collections["BACKUP"].objects.link(item)
+
         sync_origin_backup_name()
 
         prefs = context.preferences.addons[ADDON_NAME].preferences

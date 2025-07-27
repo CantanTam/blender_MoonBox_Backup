@@ -19,9 +19,9 @@ class BA_OT_restore_backup(bpy.types.Operator):
         
         del_object_name = re.sub(re.escape(restore_suffix) + ".*$", "", restore_object_name)
         
-        bpy.data.collections["BACKUP"].hide_select = False
-        bpy.data.collections["BACKUP"].hide_viewport = False
-        bpy.data.collections["BACKUP"].hide_render = False
+        #bpy.data.collections["BACKUP"].hide_select = False
+        #bpy.data.collections["BACKUP"].hide_viewport = False
+        #bpy.data.collections["BACKUP"].hide_render = False
 
         bpy.ops.object.select_all(action='DESELECT')
         restore_object.select_set(True)

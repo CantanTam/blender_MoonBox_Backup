@@ -36,10 +36,12 @@ from .list_unlist_backup import (
 )
 from .start_backup import BA_OT_start_backup
 from .func_auto_backup import auto_backup
-from .func_rename_add_delete import detect_rename_add_delete
 from .delete_backup import BA_OT_delete_backup
 from .restore_backup import BA_OT_restore_backup
-from .preview_backup import BA_OT_preview_backup
+from .preview_backup import (
+    BA_OT_preview_backup,
+    BA_OT_hide_preview_backup,
+)
 from .header_popover_panel import BA_PT_backup_setting
 from .show_button_and_menu import (
     draw_outliner_header_button,
@@ -63,7 +65,7 @@ def register_keymaps():
         kmi_outliner = km_outliner.keymap_items.new("wm.start_backup", type='A', value='PRESS', ctrl=True, shift=True)
 
         km_preview = kc.keymaps.new(name='Outliner', space_type='OUTLINER')
-        kmi_preview = km_preview.keymap_items.new("wm.preview_backup", type='LEFTMOUSE', value='PRESS', ctrl=True, alt=True)
+        kmi_preview = km_preview.keymap_items.new("wm.preview_backup", type='LEFTMOUSE', value='PRESS', ctrl=True)
 
         # 保存方便注销时移除
         addon_keymaps.extend([
@@ -81,10 +83,6 @@ def unregister_keymaps():
 @persistent
 def auto_backup_on_load(dummy):
     bpy.app.timers.register(auto_backup, first_interval=20.0)
-
-@persistent
-def detect_rename_add_delete_on_load(dummy):
-    bpy.app.timers.register(detect_rename_add_delete, first_interval=2)
 
 def register():
     bpy.utils.register_class(BA_OB_property)
@@ -105,10 +103,10 @@ def register():
     bpy.utils.register_class(BA_OT_unlist_from_backup)
     bpy.utils.register_class(BA_OT_start_backup)
     bpy.app.handlers.load_post.append(auto_backup_on_load)
-    bpy.app.handlers.load_post.append(detect_rename_add_delete_on_load)
     bpy.utils.register_class(BA_OT_delete_backup)
     bpy.utils.register_class(BA_OT_restore_backup)
     bpy.utils.register_class(BA_OT_preview_backup)
+    bpy.utils.register_class(BA_OT_hide_preview_backup)
     bpy.utils.register_class(BA_PT_backup_setting)
     bpy.types.OUTLINER_HT_header.prepend(draw_outliner_header_button)
     bpy.types.OUTLINER_MT_object.append(draw_list_unlist_backup)
@@ -131,10 +129,10 @@ def unregister():
     bpy.types.OUTLINER_MT_object.remove(draw_list_unlist_backup)
     bpy.types.OUTLINER_HT_header.remove(draw_outliner_header_button)
     bpy.utils.unregister_class(BA_PT_backup_setting)
+    bpy.utils.unregister_class(BA_OT_hide_preview_backup)
     bpy.utils.unregister_class(BA_OT_preview_backup)
     bpy.utils.unregister_class(BA_OT_restore_backup)
     bpy.utils.unregister_class(BA_OT_delete_backup)
-    bpy.app.handlers.load_post.remove(detect_rename_add_delete_on_load)
     bpy.app.handlers.load_post.remove(auto_backup_on_load)
     bpy.utils.unregister_class(BA_OT_start_backup)
     bpy.utils.unregister_class(BA_OT_unlist_from_backup)
