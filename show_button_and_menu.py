@@ -96,12 +96,13 @@ def draw_outliner_delete_backup(self, context):
         layout.operator_context = 'INVOKE_DEFAULT'
         layout.operator("bak.delete_backup", text=f"删除{context.active_object.name}的所有备份", icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
 
-def draw_outliner_restore_backup(self, context):
+def draw_outliner_rerestore_backup(self, context):
     if bpy.context.active_object.ba_data.object_type == "DUPLICATE":
     
         layout = self.layout
         layout.separator()
-        layout.operator("bak.store_backup", text="恢复备份", icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id)
+        layout.operator_context = 'INVOKE_DEFAULT'
+        layout.operator("bak.restore_backup", text="恢复备份", icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id)
 
 
 

@@ -5,75 +5,45 @@ from .func_remove_unlinked import remove_all_unlinked
 from .func_list_backup import list_all_backup
 
 class BA_OT_restore_backup(bpy.types.Operator):
-    bl_idname = "bak.store_backup"
+    bl_idname = "bak.restore_backup"
     bl_label = "恢复备份"
     bl_description = "恢复备份"
     bl_options = {'REGISTER', 'UNDO'}
     
+    has_origin_object = True
+    origin_object_name = ""
+
+    def draw(self, context):
+        layout = self.layout
+        if self.has_origin_object:
+            layout.label(text=f"恢复文件将会覆盖\"{self.origin_object_name}\"，确认恢复？",icon="ERROR")
+        else:
+            layout.label(text="原文件已经被删除，确认恢复？", icon='ERROR')
+
+    def invoke(self, context, event):
+        origin_name_uuids = {
+            item.ba_data.object_uuid: item.name
+            for item in bpy.data.objects if item.ba_data.object_type == 'ORIGIN'
+            and item.ba_data.object_uuid != "" }
+        
+        if context.active_object.ba_data.object_uuid in origin_name_uuids:
+            self.has_origin_object = True
+            self.origin_object_name = origin_name_uuids[context.active_object.ba_data.object_uuid]
+        else:
+            self.has_origin_object = False
+
+        return context.window_manager.invoke_props_dialog(self)
+    
     def execute(self, context):
         list_all_backup()
 
-        remove_all_unlinked()
-
         restore_object = context.active_object
-        restore_object_name = context.active_object.name
 
-        restore_suffix = "_" + context.preferences.addons[ADDON_NAME].preferences.custom_suffix + "_"
-        
-        del_object_name = re.sub(re.escape(restore_suffix) + ".*$", "", restore_object_name)
-        
-        bpy.data.collections["BACKUP"].hide_select = False
-        bpy.data.collections["BACKUP"].hide_viewport = False
-        bpy.data.collections["BACKUP"].hide_render = False
-
-        bpy.ops.object.select_all(action='DESELECT')
-        restore_object.select_set(True)
-        bpy.context.view_layer.objects.active = restore_object
-
-        if not bpy.data.objects.get(del_object_name):
-            bpy.ops.object.duplicate()
-            bpy.context.active_object.name = del_object_name
-            bpy.context.active_object.data.name = del_object_name
-
-            bpy.data.collections["BACKUP"].objects.unlink(bpy.data.objects.get(del_object_name))
-            bpy.context.scene.collection.objects.link(bpy.data.objects.get(del_object_name))
-
+        if self.has_origin_object:
+            self.report({'INFO'}, f"{self.origin_object_name}")
         else:
-            bpy.ops.object.duplicate()
-
-            to_rename_object = bpy.context.active_object
-            to_rename_object_data_name = bpy.data.objects.get(del_object_name).data.name
-
-            del_object = bpy.data.objects.get(del_object_name)
-
-            del_object_collection = del_object.users_collection #这里获取的是 collections 列表，后面需要用 for 处理
-
-            bpy.ops.object.select_all(action='DESELECT')
-            del_object.select_set(True)
-            bpy.context.view_layer.objects.active = del_object
-            bpy.ops.object.delete()    
-
-            remove_all_unlinked()
-
-            to_rename_object.name = del_object_name
-            to_rename_object.data.name = to_rename_object_data_name
-
-            move_collection_object = bpy.data.objects.get(del_object_name)
-
-            bpy.ops.object.select_all(action='DESELECT')
-            move_collection_object.select_set(True)
-            bpy.context.view_layer.objects.active = move_collection_object
-
-            for collections in move_collection_object.users_collection:
-                collections.objects.unlink(move_collection_object)
-
-            for collections in del_object_collection:
-                collections.objects.link(move_collection_object)
-
-        bpy.context.active_object.ba_data.object_type = "ORIGIN"
-
-        bpy.data.collections["BACKUP"].hide_select = True
-        bpy.data.collections["BACKUP"].hide_viewport = True
-        bpy.data.collections["BACKUP"].hide_render = True
+            self.report({'INFO'}, "没有原始文件")
 
         return {'FINISHED'}
+
+
