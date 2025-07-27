@@ -2,6 +2,7 @@ import bpy
 import re
 from . import ADDON_NAME
 from .func_remove_unlinked import remove_all_unlinked
+from .func_list_backup import list_all_backup
 
 class BA_OT_restore_backup(bpy.types.Operator):
     bl_idname = "bak.store_backup"
@@ -10,6 +11,8 @@ class BA_OT_restore_backup(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
     
     def execute(self, context):
+        list_all_backup()
+
         remove_all_unlinked()
 
         restore_object = context.active_object
@@ -19,9 +22,9 @@ class BA_OT_restore_backup(bpy.types.Operator):
         
         del_object_name = re.sub(re.escape(restore_suffix) + ".*$", "", restore_object_name)
         
-        #bpy.data.collections["BACKUP"].hide_select = False
-        #bpy.data.collections["BACKUP"].hide_viewport = False
-        #bpy.data.collections["BACKUP"].hide_render = False
+        bpy.data.collections["BACKUP"].hide_select = False
+        bpy.data.collections["BACKUP"].hide_viewport = False
+        bpy.data.collections["BACKUP"].hide_render = False
 
         bpy.ops.object.select_all(action='DESELECT')
         restore_object.select_set(True)
