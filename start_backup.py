@@ -18,7 +18,7 @@ class BA_OT_start_backup(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        return is_in_backup_list() == 1
+        return is_in_backup_list() == 1 and len(context.selected_objects) == 1 and context.active_object in context.selected_objects
 
     def execute(self, context):
         # 函数含有写操作，而 poll 只允许不非写操作的判定，所以放到主 execute 进行操作
