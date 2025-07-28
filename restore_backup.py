@@ -52,6 +52,7 @@ class BA_OT_restore_backup(bpy.types.Operator):
         restore_object = context.active_object
 
         bpy.context.active_object.ba_data.object_type = "ORIGIN"
+        bpy.context.active_object.ba_data.backup_uuid = ""
         bpy.context.active_object.use_fake_user = False        
 
         if self.has_origin_object:

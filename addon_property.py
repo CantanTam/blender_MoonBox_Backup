@@ -50,4 +50,5 @@ class BA_OB_property(bpy.types.PropertyGroup):
     backup_infix: bpy.props.StringProperty(default="")
     backup_time: bpy.props.StringProperty(default="")
     use_backup: bpy.props.BoolProperty(default=True)
-    show_on_outliner: bpy.props.BoolProperty(default=False)
+    # 用来区分相同原物体的备份快照文件名称
+    backup_uuid: bpy.props.StringProperty(default="")

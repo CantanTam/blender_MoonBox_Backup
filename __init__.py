@@ -2,6 +2,7 @@ import bpy
 import os
 from bpy.app.handlers import persistent
 
+
 bl_info = {
     "name": "Backup Assistant",
     "author": "Canta Tam",
@@ -17,6 +18,9 @@ bl_info = {
 ADDON_NAME = os.path.basename(os.path.dirname(__file__))
 
 addon_keymaps = []
+
+# 测试类
+from .test_preview_snapshot import BA_OT_test_preview_snapshot
 
 from .addon_property import (
     BA_PG_object_edit_record,
@@ -37,9 +41,9 @@ from .start_backup import BA_OT_start_backup
 from .func_auto_backup import auto_backup
 from .delete_backup import BA_OT_delete_backup
 from .restore_backup import BA_OT_restore_backup
-from .preview_backup import (
-    BA_OT_preview_backup,
-    BA_OT_hide_preview_backup,
+from .show_hide_backup import (
+    BA_OT_show_backup,
+    BA_OT_show_backup_without_origin,
 )
 from .header_popover_panel import BA_PT_backup_setting
 from .show_button_and_menu import (
@@ -63,7 +67,7 @@ def register_keymaps():
         kmi_outliner = km_outliner.keymap_items.new("wm.start_backup", type='A', value='PRESS', ctrl=True, shift=True)
 
         km_preview = kc.keymaps.new(name='Outliner', space_type='OUTLINER')
-        kmi_preview = km_preview.keymap_items.new("wm.preview_backup", type='LEFTMOUSE', value='PRESS', ctrl=True)
+        kmi_preview = km_preview.keymap_items.new("wm.show_backup", type='LEFTMOUSE', value='PRESS', ctrl=True)
 
         # 保存方便注销时移除
         addon_keymaps.extend([
@@ -102,8 +106,8 @@ def register():
     bpy.app.handlers.load_post.append(auto_backup_on_load)
     bpy.utils.register_class(BA_OT_delete_backup)
     bpy.utils.register_class(BA_OT_restore_backup)
-    bpy.utils.register_class(BA_OT_preview_backup)
-    bpy.utils.register_class(BA_OT_hide_preview_backup)
+    bpy.utils.register_class(BA_OT_show_backup)
+    bpy.utils.register_class(BA_OT_show_backup_without_origin)
     bpy.utils.register_class(BA_PT_backup_setting)
     bpy.types.OUTLINER_HT_header.prepend(draw_outliner_header_button)
     bpy.types.OUTLINER_MT_object.append(draw_list_unlist_backup)
@@ -113,9 +117,14 @@ def register():
     bpy.types.VIEW3D_MT_edit_mesh_context_menu.append(draw_start_backup)
     register_keymaps()
 
+    bpy.utils.register_class(BA_OT_test_preview_snapshot)
+
+
 
 
 def unregister():
+    bpy.utils.unregister_class(BA_OT_test_preview_snapshot)
+
     unregister_keymaps()
     bpy.types.VIEW3D_MT_edit_mesh_context_menu.remove(draw_start_backup)
     bpy.types.VIEW3D_MT_object_context_menu.remove(draw_start_backup)
@@ -124,8 +133,8 @@ def unregister():
     bpy.types.OUTLINER_MT_object.remove(draw_list_unlist_backup)
     bpy.types.OUTLINER_HT_header.remove(draw_outliner_header_button)
     bpy.utils.unregister_class(BA_PT_backup_setting)
-    bpy.utils.unregister_class(BA_OT_hide_preview_backup)
-    bpy.utils.unregister_class(BA_OT_preview_backup)
+    bpy.utils.unregister_class(BA_OT_show_backup_without_origin)
+    bpy.utils.unregister_class(BA_OT_show_backup)
     bpy.utils.unregister_class(BA_OT_restore_backup)
     bpy.utils.unregister_class(BA_OT_delete_backup)
     bpy.app.handlers.load_post.remove(auto_backup_on_load)

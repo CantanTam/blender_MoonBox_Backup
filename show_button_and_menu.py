@@ -57,36 +57,33 @@ def draw_list_unlist_backup(self, context):
 
 
 def draw_start_backup(self, context):
-    if not is_in_backup_list():
+    if not is_in_backup_list() or not context.preferences.addons[ADDON_NAME].preferences.right_click_backup:
         return
-
-    layout = self.layout
-
-    prefs = context.preferences.addons[ADDON_NAME].preferences
-
+    
     backup_object_name = bpy.context.active_object.name
+    layout = self.layout
+    # 测试备份 snapshot 功能
+    layout.operator("wm.test_preview_snapshot", text="测试SnapShot功能", icon="HIDE_OFF")
+    if bpy.context.mode == 'OBJECT' and bpy.context.selected_objects:
 
-    if prefs.right_click_backup:
-        if bpy.context.mode == 'OBJECT' and bpy.context.selected_objects:
+        layout.separator()
+        layout.operator(
+            "wm.start_backup", 
+            text=f"备份\"{backup_object_name}\"", 
+            icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id,
+            ),
+            
+        
+    elif bpy.context.mode == 'EDIT_MESH':
+        bm = bmesh.from_edit_mesh(bpy.context.active_object.data)
+        if any(v.select for v in bm.verts) or any(e.select for e in bm.edges) or any(f.select for f in bm.faces):
 
             layout.separator()
             layout.operator(
                 "wm.start_backup", 
                 text=f"备份\"{backup_object_name}\"", 
                 icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id,
-                ),
-                
-            
-        elif bpy.context.mode == 'EDIT_MESH':
-            bm = bmesh.from_edit_mesh(bpy.context.active_object.data)
-            if any(v.select for v in bm.verts) or any(e.select for e in bm.edges) or any(f.select for f in bm.faces):
-
-                layout.separator()
-                layout.operator(
-                    "wm.start_backup", 
-                    text=f"备份\"{backup_object_name}\"", 
-                    icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id,
-                    )
+                )
 
 def draw_outliner_delete_backup(self, context):
     if context.active_object.ba_data.object_type == "ORIGIN" and context.active_object.ba_data.object_uuid != "":

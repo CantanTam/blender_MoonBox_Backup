@@ -53,10 +53,21 @@ class BA_OT_start_backup(bpy.types.Operator):
 
         bpy.ops.object.duplicate()
 
+        # 生成 backup_uuid 区分每个备份件
+        backup_uuids = {
+            item.ba_data for item in bpy.data.objects if item.ba_data.object_type == "ORIGIN" 
+            and item.ba_data.object_uuid == origin_object.ba_data.object_uuid}
+        
+        while True:
+            new_backup_uuid = ''.join(random.choices(string.ascii_letters, k=6))
+            if new_backup_uuid not in backup_uuids:
+                break
+        
         # 副本指定为 DUPLICATE 类型，并添加备份时间，名字中缀
         context.active_object.ba_data.object_type = "DUPLICATE"
         context.active_object.ba_data.backup_time = datetime.datetime.now().strftime("%Y%m%d%H%M")
         context.active_object.ba_data.backup_infix = "_" + backup_object_infix + "_"
+        context.active_object.ba_data.backup_uuid = new_backup_uuid
         
         bpy.context.active_object.data.name = bpy.context.active_object.name
 
