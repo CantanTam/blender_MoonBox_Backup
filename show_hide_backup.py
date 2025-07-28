@@ -7,6 +7,10 @@ class BA_OT_show_backup(bpy.types.Operator):
     bl_description = "只列出当前选择原文件的备份"
     bl_options = {'REGISTER', 'UNDO'}
 
+    @classmethod
+    def poll(cls, context):
+        return context.active_object.ba_data.object_type == "ORIGIN"
+
     def execute(self, context):
 
         list_backup_with_origin()
@@ -14,7 +18,7 @@ class BA_OT_show_backup(bpy.types.Operator):
         self.report({'INFO'}, f"{bpy.context.active_object.name}测试点击list预览功能")
         return {'FINISHED'}
     
-
+# 这个类，其实可以删除，因为采用侧边栏
 class BA_OT_show_backup_without_origin(bpy.types.Operator):
     bl_idname = "wm.show_backup_withou_origin"
     bl_label = "预览备份"

@@ -1,5 +1,5 @@
 import bpy
-import re,datetime,random,string
+import os,re,datetime,random,string
 from . import ADDON_NAME
 from .func_detect_backup_folder import has_backup_folder
 from .func_remove_unlinked import remove_all_unlinked
@@ -38,7 +38,7 @@ class BA_OT_start_backup(bpy.types.Operator):
         origin_object = context.active_object
 
         if origin_object.ba_data.object_uuid == "":
-            origin_object.ba_data.object_uuid = datetime.datetime.now().strftime("%Y%m%d%H%M%S") + "_" + ''.join(random.choices(string.ascii_letters, k=6))
+            origin_object.ba_data.object_uuid = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
         temp_object_name = context.active_object.name + "_" + backup_object_infix + "_"
 
@@ -86,16 +86,54 @@ class BA_OT_start_backup(bpy.types.Operator):
         bpy.context.view_layer.objects.active = origin_object
         origin_object.select_set(True)
 
+        # 以下是生成备份 snapshot ：
+        previous_render_engine = context.scene.render.engine
+
+        previous_camera_location = context.scene.camera.location.copy()
+        previous_camera_euler = context.scene.camera.rotation_euler.copy()
+
+        previous_resolution_x = context.scene.render.resolution_x
+        previous_resolution_y = context.scene.render.resolution_y
+
+        previous_render_format = context.scene.render.image_settings.file_format
+
+        context.scene.render.resolution_x = 500
+        context.scene.render.resolution_y = 500
+
+        context.scene.render.image_settings.file_format = 'JPEG'
+
+        context.scene.render.engine = 'BLENDER_EEVEE_NEXT'
+
+        bpy.ops.view3d.camera_to_view_selected()
+
+        addon_dir = os.path.dirname(__file__)
+        snapshot_dir = os.path.join(addon_dir, "backup_snapshots")
+        os.makedirs(snapshot_dir, exist_ok=True)
+
+        snapshot_name = context.active_object.ba_data.object_uuid + "_" + new_backup_uuid + ".jpg"
+
+        save_path = os.path.join(snapshot_dir,snapshot_name)
+
+        context.scene.render.filepath = save_path
+
+        bpy.ops.render.render(write_still=True)
+
+        context.scene.render.engine = previous_render_engine
+
+        context.scene.render.image_settings.file_format = previous_render_format
+
+        context.scene.render.resolution_y = previous_resolution_y
+        context.scene.render.resolution_x = previous_resolution_x
+
+        context.scene.camera.location = previous_camera_location
+        context.scene.camera.rotation_euler = previous_camera_euler
+        # 以上是生成备份 snapshot：
+
         bpy.ops.object.mode_set(mode=origin_edit_mode)
 
         backup_count = prefs.backup_copies_count
 
-        if backup_count == 0:
-            list_backup_with_origin()
-
-            progress_notice("test.png")
-            return {'FINISHED'}
-        else:
+        if backup_count > 0: # 备份数量不为零的时候，就需要删除多余备份，并删除相应的 snapshot
             backup_collection = bpy.data.collections["BACKUP"]
             pattern = re.compile(rf"^{re.escape(temp_object_name)}\.(\d+)$")
 
@@ -138,9 +176,31 @@ class BA_OT_start_backup(bpy.types.Operator):
                     print(f"重命名：{obj.name} -> {new_name}")
                     obj.name = new_name
                     obj.data.name = new_name
+
+            # 清除多余备份
+            remain_backup_names = {
+                item.ba_data.object_uuid + "_" + item.ba_data.backup_uuid + ".jpg"
+                for item in bpy.data.objects 
+                if item.ba_data.object_uuid == context.active_object.ba_data.object_uuid}
+            
+            all_backup_names = {
+                item 
+                for item in os.listdir(snapshot_dir)
+                if context.active_object.ba_data.object_uuid in item
+            }
+
+            delete_backup_names = all_backup_names - remain_backup_names
+
+            for item in delete_backup_names:
+                if os.path.exists(os.path.join(snapshot_dir, item)):
+                    os.remove(os.path.join(snapshot_dir, item))
+
+
+
         
         list_backup_with_origin()
-        
+        progress_notice("test.png")
+
         self.report({'INFO'}, "测试指定备份副本数")
         
         progress_notice("test.png")

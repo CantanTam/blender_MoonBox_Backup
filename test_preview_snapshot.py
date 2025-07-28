@@ -8,6 +8,8 @@ class BA_OT_test_preview_snapshot(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
+        previous_render_engine = context.scene.render.engine
+
         previous_camera_location = context.scene.camera.location.copy()
         previous_camera_euler = context.scene.camera.rotation_euler.copy()
 
@@ -20,6 +22,8 @@ class BA_OT_test_preview_snapshot(bpy.types.Operator):
         context.scene.render.resolution_y = 500
 
         context.scene.render.image_settings.file_format = 'JPEG'
+
+        context.scene.render.engine = 'BLENDER_EEVEE_NEXT'
 
         bpy.ops.view3d.camera_to_view_selected()
 
@@ -34,6 +38,8 @@ class BA_OT_test_preview_snapshot(bpy.types.Operator):
 
         bpy.ops.render.render(write_still=True)
 
+        context.scene.render.engine = previous_render_engine
+
         context.scene.render.image_settings.file_format = previous_render_format
 
         context.scene.render.resolution_y = previous_resolution_y
@@ -41,6 +47,7 @@ class BA_OT_test_preview_snapshot(bpy.types.Operator):
 
         context.scene.camera.location = previous_camera_location
         context.scene.camera.rotation_euler = previous_camera_euler
+
         
         self.report({'INFO'}, f"{bpy.context.active_object.name}测试snapshot预览功能")
         return {'FINISHED'}
