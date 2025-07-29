@@ -24,10 +24,6 @@ class BA_OT_start_backup(bpy.types.Operator):
         # 函数含有写操作，而 poll 只允许不非写操作的判定，所以放到主 execute 进行操作
         #if not is_edit_change():
         #   return {'FINISHED'}
-    
-        list_all_backup()
-
-        sync_origin_backup_name()
 
         prefs = context.preferences.addons[ADDON_NAME].preferences
         backup_object_infix = prefs.custom_suffix
@@ -37,8 +33,23 @@ class BA_OT_start_backup(bpy.types.Operator):
         origin_edit_mode = context.object.mode
         origin_object = context.active_object
 
+        # 检测是否有相同 uuid 的原件
         if origin_object.ba_data.object_uuid == "":
             origin_object.ba_data.object_uuid = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+        
+        else:
+            origin_object_uuids = [
+                item.ba_data.object_uuid
+                for item in bpy.data.objects 
+                if item.ba_data.object_type == 'ORIGIN']
+            
+            if origin_object_uuids.count(origin_object.ba_data.object_uuid) > 1:
+                bpy.ops.bak.handler_repeat_uuid('INVOKE_DEFAULT')
+                return {'FINISHED'}
+            
+        list_all_backup()
+
+        sync_origin_backup_name()
 
         temp_object_name = context.active_object.name + "_" + backup_object_infix + "_"
 
@@ -199,6 +210,7 @@ class BA_OT_start_backup(bpy.types.Operator):
 
         
         list_backup_with_origin()
+
         progress_notice("test.png")
 
         self.report({'INFO'}, "测试指定备份副本数")

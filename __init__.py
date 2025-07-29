@@ -35,6 +35,11 @@ from .list_unlist_backup import (
     BA_OT_unlist_from_backup,
 )
 from .start_backup import BA_OT_start_backup
+from .handler_repeat_origin import (
+    BA_OT_handle_repeat_uuid,
+    BA_OT_remove_other_uuid,
+    BA_OT_remove_self_uuid,
+)
 from .func_auto_backup import auto_backup
 from .delete_backup import BA_OT_delete_backup
 from .restore_backup import BA_OT_restore_backup
@@ -52,7 +57,6 @@ from .show_button_and_menu import (
 )
 from .preview_backup_sidebar import (
     BA_PT_backup_snapshot_sidebar,
-    load_backup_snapshots,
     clear_backup_snapshots,
 )
 
@@ -105,6 +109,9 @@ def register():
     bpy.utils.register_class(BA_OT_list_to_backup)
     bpy.utils.register_class(BA_OT_unlist_from_backup)
     bpy.utils.register_class(BA_OT_start_backup)
+    bpy.utils.register_class(BA_OT_handle_repeat_uuid)
+    bpy.utils.register_class(BA_OT_remove_other_uuid)
+    bpy.utils.register_class(BA_OT_remove_self_uuid)
     bpy.app.handlers.load_post.append(auto_backup_on_load)
     bpy.utils.register_class(BA_OT_delete_backup)
     bpy.utils.register_class(BA_OT_restore_backup)
@@ -141,6 +148,9 @@ def unregister():
     bpy.utils.unregister_class(BA_OT_restore_backup)
     bpy.utils.unregister_class(BA_OT_delete_backup)
     bpy.app.handlers.load_post.remove(auto_backup_on_load)
+    bpy.utils.unregister_class(BA_OT_remove_self_uuid)
+    bpy.utils.unregister_class(BA_OT_remove_other_uuid)
+    bpy.utils.unregister_class(BA_OT_handle_repeat_uuid)
     bpy.utils.unregister_class(BA_OT_start_backup)
     bpy.utils.unregister_class(BA_OT_unlist_from_backup)
     bpy.utils.unregister_class(BA_OT_list_to_backup)
