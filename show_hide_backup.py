@@ -9,7 +9,7 @@ class BA_OT_show_backup(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        return context.active_object.ba_data.object_type == "ORIGIN"
+        return context.active_object.ba_data.object_type == "ORIGIN" and context.active_object.ba_data.object_uuid != ""
 
     def execute(self, context):
         bpy.data.collections["BACKUP"].hide_viewport = False
