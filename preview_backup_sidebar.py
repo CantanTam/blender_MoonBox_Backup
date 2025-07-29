@@ -49,9 +49,9 @@ class VIEW3D_PT_icon_image_panel(bpy.types.Panel):
         current_snapshot = current_backup.ba_data.object_uuid + "_" + current_backup.ba_data.backup_uuid
 
         layout = self.layout
-        if backup_snapshots and "20250729120246_PLdZgw" in backup_snapshots:
+        if backup_snapshots and current_snapshot in backup_snapshots:
             box = layout.box()  # 创建一个带边框的区域
-            box.template_icon(icon_value=backup_snapshots["20250729120246_PLdZgw"].icon_id, scale=10)
+            box.template_icon(icon_value=backup_snapshots[current_snapshot].icon_id, scale=10)
         else:
             layout.label(text="未加载图标")
         layout.operator("transform.translate", icon="CUBE", text="")
