@@ -42,6 +42,7 @@ class BA_OT_restore_backup(bpy.types.Operator):
         bpy.data.collections["BACKUP"].hide_select = False
         bpy.data.collections["BACKUP"].hide_viewport = False
         bpy.data.collections["BACKUP"].hide_render = False
+        bpy.context.view_layer.layer_collection.children['BACKUP'].hide_viewport = False
 
         bpy.ops.object.select_all(action='DESELECT')
         context.active_object.select_set(True)
@@ -88,6 +89,7 @@ class BA_OT_restore_backup(bpy.types.Operator):
         bpy.data.collections["BACKUP"].hide_select = True
         bpy.data.collections["BACKUP"].hide_viewport = True
         bpy.data.collections["BACKUP"].hide_render = True
+        bpy.context.view_layer.layer_collection.children['BACKUP'].hide_viewport = True
 
 
         list_backup_with_origin()

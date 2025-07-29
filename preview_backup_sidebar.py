@@ -32,9 +32,9 @@ def clear_backup_snapshots():
         backup_snapshots = None
         is_snapshot_loaded = False
 
-class VIEW3D_PT_icon_image_panel(bpy.types.Panel):
+class BA_PT_backup_snapshot_sidebar(bpy.types.Panel):
     bl_label = "Icon Image Example"
-    bl_idname = "VIEW3D_PT_icon_image_panel"
+    bl_idname = "bak.backup_snapshot_sidebar"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
     bl_category = "Preview"

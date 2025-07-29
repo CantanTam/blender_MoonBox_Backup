@@ -51,7 +51,7 @@ from .show_button_and_menu import (
     draw_outliner_rerestore_backup,
 )
 from .preview_backup_sidebar import (
-    VIEW3D_PT_icon_image_panel,
+    BA_PT_backup_snapshot_sidebar,
     load_backup_snapshots,
     clear_backup_snapshots,
 )
@@ -117,7 +117,7 @@ def register():
     bpy.types.OUTLINER_MT_object.append(draw_outliner_rerestore_backup)
     bpy.types.VIEW3D_MT_object_context_menu.append(draw_start_backup)
     bpy.types.VIEW3D_MT_edit_mesh_context_menu.append(draw_start_backup)
-    bpy.utils.register_class(VIEW3D_PT_icon_image_panel)
+    bpy.utils.register_class(BA_PT_backup_snapshot_sidebar)
     register_keymaps()
     #load_backup_snapshots()
 
@@ -128,7 +128,7 @@ def register():
 def unregister():
     clear_backup_snapshots()
     unregister_keymaps()
-    bpy.utils.unregister_class(VIEW3D_PT_icon_image_panel)
+    bpy.utils.unregister_class(BA_PT_backup_snapshot_sidebar)
     bpy.types.VIEW3D_MT_edit_mesh_context_menu.remove(draw_start_backup)
     bpy.types.VIEW3D_MT_object_context_menu.remove(draw_start_backup)
     bpy.types.OUTLINER_MT_object.remove(draw_outliner_rerestore_backup)

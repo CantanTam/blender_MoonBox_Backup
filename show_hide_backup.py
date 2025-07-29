@@ -1,6 +1,6 @@
 import bpy
 from .func_list_backup import unlist_all_backup,list_all_backup,list_backup_with_origin,list_backup_without_origin
-
+from .func_sync_name import sync_origin_backup_name
 class BA_OT_show_backup(bpy.types.Operator):
     bl_idname = "wm.show_backup"
     bl_label = "列出原件备份"
@@ -12,6 +12,9 @@ class BA_OT_show_backup(bpy.types.Operator):
         return context.active_object.ba_data.object_type == "ORIGIN"
 
     def execute(self, context):
+        bpy.data.collections["BACKUP"].hide_viewport = False
+
+        sync_origin_backup_name()
 
         list_backup_with_origin()
         
