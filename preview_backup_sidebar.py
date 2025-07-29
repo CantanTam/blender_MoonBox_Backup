@@ -2,7 +2,7 @@ import bpy
 import bpy.utils.previews
 import os
 
-
+backup_snapshot_dict = {}
 backup_snapshots = None
 is_snapshot_loaded = False
 
@@ -18,11 +18,6 @@ def load_backup_snapshots():
             snapshot_name = os.path.splitext(filename)[0]
             snapshot_path = os.path.join(snapshot_dir, filename)
             backup_snapshots.load(snapshot_name, snapshot_path, 'IMAGE')
-
-    #snapshot_path = os.path.join(snapshot_dir, "test.jpg")
-
-    #if os.path.exists(snapshot_path):
-        #backup_snapshots.load("my_icon", snapshot_path, 'IMAGE')
 
 def clear_backup_snapshots():
     global backup_snapshots

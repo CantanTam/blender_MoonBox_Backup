@@ -1,7 +1,8 @@
 import bpy
+from . import ADDON_NAME
 from .func_list_backup import unlist_all_backup,list_all_backup,list_backup_with_origin,list_backup_without_origin
 from .func_sync_name import sync_origin_backup_name
-from .preview_backup_sidebar import clear_backup_snapshots
+from .preview_backup_sidebar import clear_backup_snapshots,backup_snapshot_dict
 
 class BA_OT_show_backup(bpy.types.Operator):
     bl_idname = "wm.show_backup"
@@ -14,6 +15,10 @@ class BA_OT_show_backup(bpy.types.Operator):
         return context.active_object.ba_data.object_type == "ORIGIN" and context.active_object.ba_data.object_uuid != ""
 
     def execute(self, context):
+        global backup_snapshot_dict
+
+        backup_infix = context.preferences.addons[ADDON_NAME].preferences.custom_suffix + "."
+
         bpy.data.collections["BACKUP"].hide_viewport = False
 
         clear_backup_snapshots()
@@ -22,6 +27,14 @@ class BA_OT_show_backup(bpy.types.Operator):
 
         list_backup_with_origin()
         
+        backup_snapshot_dict = {
+            item.name.split(backup_infix)[-1]: item
+            for item in bpy.data.objects
+            if item.ba_data.object_uuid == context.active_object.ba_data.object_uuid
+            and item.ba_data.object_type == "DUPLICATE"
+        }
+            
+
         self.report({'INFO'}, f"{bpy.context.active_object.name}测试点击list预览功能")
         return {'FINISHED'}
     
