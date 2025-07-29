@@ -19,9 +19,6 @@ ADDON_NAME = os.path.basename(os.path.dirname(__file__))
 
 addon_keymaps = []
 
-# 测试类
-from .test_preview_snapshot import BA_OT_test_preview_snapshot
-
 from .addon_property import (
     BA_PG_object_edit_record,
     BA_PG_object_edit_record_list,
@@ -52,6 +49,11 @@ from .show_button_and_menu import (
     draw_start_backup,
     draw_outliner_delete_backup,
     draw_outliner_rerestore_backup,
+)
+from .preview_backup_sidebar import (
+    VIEW3D_PT_icon_image_panel,
+    load_backup_snapshots,
+    clear_backup_snapshots,
 )
 
 def register_keymaps():
@@ -115,17 +117,18 @@ def register():
     bpy.types.OUTLINER_MT_object.append(draw_outliner_rerestore_backup)
     bpy.types.VIEW3D_MT_object_context_menu.append(draw_start_backup)
     bpy.types.VIEW3D_MT_edit_mesh_context_menu.append(draw_start_backup)
+    bpy.utils.register_class(VIEW3D_PT_icon_image_panel)
     register_keymaps()
+    #load_backup_snapshots()
 
-    bpy.utils.register_class(BA_OT_test_preview_snapshot)
 
 
 
 
 def unregister():
-    bpy.utils.unregister_class(BA_OT_test_preview_snapshot)
-
+    clear_backup_snapshots()
     unregister_keymaps()
+    bpy.utils.unregister_class(VIEW3D_PT_icon_image_panel)
     bpy.types.VIEW3D_MT_edit_mesh_context_menu.remove(draw_start_backup)
     bpy.types.VIEW3D_MT_object_context_menu.remove(draw_start_backup)
     bpy.types.OUTLINER_MT_object.remove(draw_outliner_rerestore_backup)
