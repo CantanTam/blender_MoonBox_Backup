@@ -26,7 +26,17 @@ class BA_OT_remove_other_uuid(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        self.report({'INFO'}, "你点击了按钮 A")
+        selected_object = context.active_object
+        for item in {
+            item 
+            for item in bpy.data.objects
+            if item.ba_data.object_uuid !=""
+            and item.ba_data.object_uuid == selected_object.ba_data.object_uuid
+            and item != selected_object}:
+            item.ba_data.object_uuid = ""
+
+        bpy.ops.wm.start_backup()
+
         return {'FINISHED'}
 
 class BA_OT_remove_self_uuid(bpy.types.Operator):
@@ -36,6 +46,9 @@ class BA_OT_remove_self_uuid(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        self.report({'INFO'}, "你点击了按钮 B")
+        context.active_object.ba_data.object_uuid = ""
+
+        bpy.ops.wm.start_backup()
+
         return {'FINISHED'}
 
