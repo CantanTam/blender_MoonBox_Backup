@@ -2,7 +2,7 @@ import bpy
 from . import ADDON_NAME
 from .func_list_backup import unlist_all_backup,list_all_backup,list_backup_with_origin,list_backup_without_origin
 from .func_sync_name import sync_origin_backup_name
-from .preview_backup_sidebar import clear_backup_snapshots,backup_snapshot_dict
+from .preview_backup_sidebar import clear_backup_snapshots#,backup_snapshot_dict
 
 class BA_OT_show_backup(bpy.types.Operator):
     bl_idname = "wm.show_backup"
@@ -15,7 +15,7 @@ class BA_OT_show_backup(bpy.types.Operator):
         return context.active_object.ba_data.object_type == "ORIGIN" and context.active_object.ba_data.object_uuid != ""
 
     def execute(self, context):
-        global backup_snapshot_dict
+        #global backup_snapshot_dict
 
         backup_infix = context.preferences.addons[ADDON_NAME].preferences.custom_suffix + "."
 

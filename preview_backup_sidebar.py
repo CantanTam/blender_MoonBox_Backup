@@ -1,23 +1,33 @@
 import bpy
 import bpy.utils.previews
 import os
+from . import ADDON_NAME
 
-backup_snapshot_dict = {}
+#backup_snapshot_dict = {}
 backup_snapshots = None
 is_snapshot_loaded = False
 
 def load_backup_snapshots():
+    backup_infix = bpy.context.preferences.addons[ADDON_NAME].preferences.custom_suffix + "."
+
     global backup_snapshots
     if backup_snapshots is None:
         backup_snapshots = bpy.utils.previews.new()
 
     snapshot_dir = os.path.join(os.path.dirname(__file__), "backup_snapshots")
 
-    for filename in os.listdir(snapshot_dir):
-        if filename.lower().endswith(".jpg"):
-            snapshot_name = os.path.splitext(filename)[0]
-            snapshot_path = os.path.join(snapshot_dir, filename)
-            backup_snapshots.load(snapshot_name, snapshot_path, 'IMAGE')
+    backup_snapshot_dict = {
+        item.name.split(backup_infix)[-1]: item
+        for item in bpy.data.objects
+        if item.ba_data.object_uuid == bpy.context.active_object.ba_data.object_uuid
+        and item.ba_data.object_type == "DUPLICATE"
+    }
+
+    for item in backup_snapshot_dict.values():
+        snapshot_index = item.ba_data.object_uuid + "_" + item.ba_data.backup_uuid
+        snapshot_path = os.path.join(snapshot_dir, snapshot_index + ".jpg")
+        backup_snapshots.load(snapshot_index, snapshot_path, 'IMAGE' )
+        
 
 def clear_backup_snapshots():
     global backup_snapshots
