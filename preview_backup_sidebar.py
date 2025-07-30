@@ -89,6 +89,7 @@ class BA_PT_backup_snapshot_sidebar(bpy.types.Panel):
         else:
             box = layout.box()
             box.label(text="选中备份文件进行预览", icon='INFO')
+            box.operator("view3d.backup_snapshot_modal",text="测试文字/规形", icon='GREASEPENCIL')
 
 
 class BA_OT_left_backup(bpy.types.Operator):

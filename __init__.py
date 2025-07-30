@@ -59,6 +59,8 @@ from .preview_backup_sidebar import (
 
 from .open_web import BAK_OT_open_website
 
+from .backup_snapshot_modal import BA_OT_backup_snapshot_modal
+
 
 def register_keymaps():
     wm = bpy.context.window_manager
@@ -124,13 +126,15 @@ def register():
     register_keymaps()
 
     bpy.utils.register_class(BAK_OT_open_website)
-
+    bpy.utils.register_class(BA_OT_backup_snapshot_modal)
 
 
 
 
 def unregister():
+    bpy.utils.unregister_class(BA_OT_backup_snapshot_modal)
     bpy.utils.unregister_class(BAK_OT_open_website)
+
     unregister_keymaps()
     bpy.utils.unregister_class(BA_OT_right_backup)
     bpy.utils.unregister_class(BA_OT_left_backup)
