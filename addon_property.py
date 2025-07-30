@@ -1,11 +1,5 @@
 import bpy
 
-
-
-
-
-
-
 class BA_PG_object_edit_record(bpy.types.PropertyGroup):
     backup_object_uuid: bpy.props.IntProperty(default=0)
     # 记录需要备份的 object 名称

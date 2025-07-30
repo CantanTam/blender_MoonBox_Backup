@@ -10,6 +10,9 @@ backup_snapshot_dict = {}
 backup_snapshot_reverse_dict = {}
 snapshot_count = 0
 
+# left right 按钮共用计数
+left_right_arrow_shared_count = 0
+
 def load_backup_snapshots():
     global backup_snapshot_dict
     global backup_snapshot_reverse_dict
@@ -80,12 +83,33 @@ class BA_PT_backup_snapshot_sidebar(bpy.types.Panel):
             box = layout.box()  # 创建一个带边框的区域
             box.template_icon(icon_value=backup_snapshots[current_snapshot].icon_id, scale=10)
             row = layout.row(align=True)
-            row.operator("bak.open_website", text="◀")
+            row.operator("view3d.left_backup", text="◀")
             row.operator("bak.restore_backup",text="恢复备份")
-            row.operator("bak.open_website", text="▶")
+            row.operator("view3d.right_backup", text="▶")
         else:
             box = layout.box()
             box.label(text="选中备份文件进行预览", icon='INFO')
 
 
+class BA_OT_left_backup(bpy.types.Operator):
+    bl_idname = "view3d.left_backup"
+    bl_label = "上一个备份"
+    bl_description = "查看上一个备份"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        self.report({'INFO'},"测试查看前一个备份预览")
+
+        return {'FINISHED'}
+
+class BA_OT_right_backup(bpy.types.Operator):
+    bl_idname = "view3d.right_backup"
+    bl_label = "下一个备份"
+    bl_description = "查看下一个备份"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        self.report({'INFO'},"测试查看后一个备份预览")
+
+        return {'FINISHED'}
 

@@ -53,7 +53,8 @@ from .show_button_and_menu import (
 )
 from .preview_backup_sidebar import (
     BA_PT_backup_snapshot_sidebar,
-    clear_backup_snapshots,
+    BA_OT_left_backup,
+    BA_OT_right_backup,
 )
 
 from .open_web import BAK_OT_open_website
@@ -118,8 +119,9 @@ def register():
     bpy.types.VIEW3D_MT_object_context_menu.append(draw_start_backup)
     bpy.types.VIEW3D_MT_edit_mesh_context_menu.append(draw_start_backup)
     bpy.utils.register_class(BA_PT_backup_snapshot_sidebar)
+    bpy.utils.register_class(BA_OT_left_backup)
+    bpy.utils.register_class(BA_OT_right_backup)
     register_keymaps()
-    #load_backup_snapshots()
 
     bpy.utils.register_class(BAK_OT_open_website)
 
@@ -130,6 +132,8 @@ def register():
 def unregister():
     bpy.utils.unregister_class(BAK_OT_open_website)
     unregister_keymaps()
+    bpy.utils.unregister_class(BA_OT_right_backup)
+    bpy.utils.unregister_class(BA_OT_left_backup)
     bpy.utils.unregister_class(BA_PT_backup_snapshot_sidebar)
     bpy.types.VIEW3D_MT_edit_mesh_context_menu.remove(draw_start_backup)
     bpy.types.VIEW3D_MT_object_context_menu.remove(draw_start_backup)
