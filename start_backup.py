@@ -14,7 +14,7 @@ class BA_OT_start_backup(bpy.types.Operator):
     bl_idname = "wm.start_backup"
     bl_label = "启动备份"
     bl_description = "启动备份"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_options = {'REGISTER', 'UNDO'} 
 
     @classmethod
     def poll(cls, context):

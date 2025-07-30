@@ -60,7 +60,6 @@ def draw_start_backup(self, context):
     if not is_in_backup_list() or not context.preferences.addons[ADDON_NAME].preferences.right_click_backup:
         return
     
-    backup_object_name = bpy.context.active_object.name
     layout = self.layout
     # 测试备份 snapshot 功能
     layout.operator("wm.test_preview_snapshot", text="测试SnapShot功能", icon="HIDE_OFF")
@@ -69,7 +68,7 @@ def draw_start_backup(self, context):
         layout.separator()
         layout.operator(
             "wm.start_backup", 
-            text=f"备份\"{backup_object_name}\"", 
+            text=f"备份\"{bpy.context.active_object.name}\"", 
             icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id,
             ),
             
@@ -81,7 +80,7 @@ def draw_start_backup(self, context):
             layout.separator()
             layout.operator(
                 "wm.start_backup", 
-                text=f"备份\"{backup_object_name}\"", 
+                text=f"备份\"{bpy.context.active_object.name}\"", 
                 icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id,
                 )
 

@@ -7,14 +7,17 @@ from . import ADDON_NAME
 backup_snapshots = None
 is_snapshot_loaded = False
 backup_snapshot_dict = {}
+backup_snapshot_reverse_dict = {}
 snapshot_count = 0
 
 def load_backup_snapshots():
     global backup_snapshot_dict
+    global backup_snapshot_reverse_dict
+
     global backup_snapshots
     global snapshot_count
 
-    backup_infix = bpy.context.preferences.addons[ADDON_NAME].preferences.custom_suffix + "."
+    backup_infix = "_" + bpy.context.preferences.addons[ADDON_NAME].preferences.custom_suffix + "_."
 
 
     if backup_snapshots is None:
@@ -22,13 +25,21 @@ def load_backup_snapshots():
 
     snapshot_dir = os.path.join(os.path.dirname(__file__), "backup_snapshots")
 
+    # 同时用于预览和左右按钮预览功能
     backup_snapshot_dict = {
-        item.name.split(backup_infix)[-1]: item
+        int(item.name.split(backup_infix)[-1]): item
         for item in bpy.data.objects
         if item.ba_data.object_uuid == bpy.context.active_object.ba_data.object_uuid
         and item.ba_data.object_type == "DUPLICATE"
     }
 
+    # 用于左右按钮预览功能
+    backup_snapshot_reverse_dict = {
+        item: int(item.name.split(backup_infix)[-1])
+        for item in bpy.data.objects
+        if item.ba_data.object_uuid == bpy.context.active_object.ba_data.object_uuid
+        and item.ba_data.object_type == "DUPLICATE"
+    }
     snapshot_count = len(backup_snapshot_dict)
 
     for item in backup_snapshot_dict.values():
@@ -65,7 +76,7 @@ class BA_PT_backup_snapshot_sidebar(bpy.types.Panel):
         if bpy.context.mode != 'OBJECT':
             box = layout.box()
             box.label(text="请切换至物体模式使用预览功能",icon='INFO')
-        elif backup_snapshots and current_snapshot in backup_snapshots:
+        elif context.active_object and backup_snapshots and current_snapshot in backup_snapshots:
             box = layout.box()  # 创建一个带边框的区域
             box.template_icon(icon_value=backup_snapshots[current_snapshot].icon_id, scale=10)
             row = layout.row(align=True)

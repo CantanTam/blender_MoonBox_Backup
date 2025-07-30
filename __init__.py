@@ -22,10 +22,6 @@ addon_keymaps = []
 from .addon_property import (
     BA_PG_object_edit_record,
     BA_PG_object_edit_record_list,
-    BA_PG_origin_object,
-    BA_PG_origin_object_list,
-    BA_PG_copy_object,
-    BA_PG_copy_object_list,
     BA_OB_property,
 )
 from .preference import BA_OT_preference
@@ -98,14 +94,8 @@ def auto_backup_on_load(dummy):
 def register():
     bpy.utils.register_class(BA_OB_property)
     bpy.types.Object.ba_data = bpy.props.PointerProperty(type=BA_OB_property)
-    bpy.utils.register_class(BA_PG_origin_object)
-    bpy.utils.register_class(BA_PG_origin_object_list)
-    bpy.utils.register_class(BA_PG_copy_object)
-    bpy.utils.register_class(BA_PG_copy_object_list)
     bpy.utils.register_class(BA_PG_object_edit_record)
     bpy.utils.register_class(BA_PG_object_edit_record_list)
-    bpy.types.Scene.addon_origin_object = bpy.props.PointerProperty(type=BA_PG_origin_object_list)
-    bpy.types.Scene.addon_copy_object = bpy.props.PointerProperty(type=BA_PG_copy_object_list)
     bpy.types.Scene.addon_object_edit_record = bpy.props.PointerProperty(type=BA_PG_object_edit_record_list)
     bpy.utils.register_class(BA_OT_preference)
     load_custom_icons.load_custom_icons()
@@ -139,7 +129,6 @@ def register():
 
 def unregister():
     bpy.utils.unregister_class(BAK_OT_open_website)
-    clear_backup_snapshots()
     unregister_keymaps()
     bpy.utils.unregister_class(BA_PT_backup_snapshot_sidebar)
     bpy.types.VIEW3D_MT_edit_mesh_context_menu.remove(draw_start_backup)
@@ -162,15 +151,9 @@ def unregister():
     bpy.utils.unregister_class(BA_OT_list_to_backup)
     load_custom_icons.clear_custom_icons()
     bpy.utils.unregister_class(BA_OT_preference)
-    del bpy.types.Scene.addon_origin_object
-    del bpy.types.Scene.addon_copy_object
     del bpy.types.Scene.addon_object_edit_record
     bpy.utils.unregister_class(BA_PG_object_edit_record_list)
     bpy.utils.unregister_class(BA_PG_object_edit_record)
-    bpy.utils.unregister_class(BA_PG_copy_object_list)
-    bpy.utils.unregister_class(BA_PG_copy_object)
-    bpy.utils.unregister_class(BA_PG_origin_object_list)
-    bpy.utils.unregister_class(BA_PG_origin_object)
     del bpy.types.Object.ba_data
     bpy.utils.unregister_class(BA_OB_property)
 
