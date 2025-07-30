@@ -8,7 +8,6 @@ backup_snapshots = None
 is_snapshot_loaded = False
 backup_snapshot_dict = {}
 backup_snapshot_reverse_dict = {}
-snapshot_count = 0
 
 # left right 按钮共用计数
 left_right_arrow_shared_count = 0
@@ -43,6 +42,7 @@ def load_backup_snapshots():
         if item.ba_data.object_uuid == bpy.context.active_object.ba_data.object_uuid
         and item.ba_data.object_type == "DUPLICATE"
     }
+
     snapshot_count = len(backup_snapshot_dict)
 
     for item in backup_snapshot_dict.values():
@@ -97,8 +97,25 @@ class BA_OT_left_backup(bpy.types.Operator):
     bl_description = "查看上一个备份"
     bl_options = {'REGISTER', 'UNDO'}
 
+    @classmethod
+    def poll(cls, context):
+        return backup_snapshot_reverse_dict[context.active_object] > 1
+
     def execute(self, context):
-        self.report({'INFO'},"测试查看前一个备份预览")
+        global backup_snapshot_reverse_dict
+
+        previous_index = backup_snapshot_reverse_dict[context.active_object] - 1
+        previous_object = backup_snapshot_dict[previous_index]
+
+        bpy.data.collections["BACKUP"].hide_select = False
+        bpy.context.view_layer.layer_collection.children['BACKUP'].hide_viewport = False
+
+        bpy.ops.object.select_all(action='DESELECT')
+        previous_object.select_set(True)
+        bpy.context.view_layer.objects.active = previous_object
+
+        bpy.data.collections["BACKUP"].hide_select = True
+        bpy.context.view_layer.layer_collection.children['BACKUP'].hide_viewport = True
 
         return {'FINISHED'}
 
@@ -108,8 +125,25 @@ class BA_OT_right_backup(bpy.types.Operator):
     bl_description = "查看下一个备份"
     bl_options = {'REGISTER', 'UNDO'}
 
+    @classmethod
+    def poll(cls, context):
+        return backup_snapshot_reverse_dict[context.active_object] < len(backup_snapshot_reverse_dict)
+
     def execute(self, context):
-        self.report({'INFO'},"测试查看后一个备份预览")
+        global backup_snapshot_reverse_dict
+
+        next_index = backup_snapshot_reverse_dict[context.active_object] + 1
+        next_object = backup_snapshot_dict[next_index]
+
+        bpy.data.collections["BACKUP"].hide_select = False
+        bpy.context.view_layer.layer_collection.children['BACKUP'].hide_viewport = False
+
+        bpy.ops.object.select_all(action='DESELECT')
+        next_object.select_set(True)
+        bpy.context.view_layer.objects.active = next_object
+
+        bpy.data.collections["BACKUP"].hide_select = True
+        bpy.context.view_layer.layer_collection.children['BACKUP'].hide_viewport = True
 
         return {'FINISHED'}
 
