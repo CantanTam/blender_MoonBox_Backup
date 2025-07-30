@@ -3,6 +3,7 @@ import datetime
 from . import ADDON_NAME
 from .func_remove_unlinked import remove_all_unlinked
 from .func_list_backup import list_all_backup,list_backup_with_origin
+from .preview_backup_sidebar import clear_backup_snapshots
 
 class BA_OT_restore_backup(bpy.types.Operator):
     bl_idname = "bak.restore_backup"
@@ -91,8 +92,9 @@ class BA_OT_restore_backup(bpy.types.Operator):
         bpy.data.collections["BACKUP"].hide_render = True
         bpy.context.view_layer.layer_collection.children['BACKUP'].hide_viewport = True
 
-
         list_backup_with_origin()
+
+        bpy.ops.wm.show_backup()
 
         return {'FINISHED'}
 

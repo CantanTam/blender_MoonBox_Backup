@@ -127,7 +127,7 @@ class BA_OT_start_backup(bpy.types.Operator):
 
         context.scene.render.filepath = save_path
 
-        bpy.ops.render.render(write_still=True)
+        bpy.ops.render.render(write_still=True,use_viewport=True)
 
         context.scene.render.engine = previous_render_engine
 
@@ -213,8 +213,9 @@ class BA_OT_start_backup(bpy.types.Operator):
 
         progress_notice("test.png")
 
+        bpy.ops.wm.show_backup()
+
         self.report({'INFO'}, "测试指定备份副本数")
         
-        progress_notice("test.png")
         
         return {'FINISHED'}
