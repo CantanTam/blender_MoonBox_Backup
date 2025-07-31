@@ -157,7 +157,6 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
 
             return {'FINISHED'}
 
-
         if event.type == 'WHEELUPMOUSE' and event.ctrl == True:
             self.current_object_index -= 1
 
