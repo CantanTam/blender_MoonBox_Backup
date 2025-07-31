@@ -53,7 +53,7 @@ def draw_text_and_background(self, context):
 def remove_operator_info():
     global operator_info
     if operator_info is not None:
-        bpy.types.SpaceView3D.draw_handler_remove(operator_info, 'WINDOW','POST_PIXEL')
+        bpy.types.SpaceView3D.draw_handler_remove(operator_info, 'WINDOW')
         operator_info = None
 
 # 运行脚本时初始化

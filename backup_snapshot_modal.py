@@ -5,11 +5,10 @@ from gpu_extras.batch import batch_for_shader
 
 
 def draw_type_2d(color, text, size=17):
-    font_id = 0
-    blf.position(font_id, 20, 70, 0)
-    blf.color(font_id, *color)
-    blf.size(font_id, size*(bpy.context.preferences.system.dpi/72))
-    blf.draw(font_id, text)
+    blf.position(0, 20, 70, 0)
+    blf.color(0, *color)
+    blf.size(0, size*(bpy.context.preferences.system.dpi/72))
+    blf.draw(0, text)
 
 def draw_callback_2d(self, context):
     gpu.state.blend_set('ALPHA')
@@ -30,7 +29,7 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
     def invoke(self, context, event):
         if context.area.type == 'VIEW_3D':
             args = (self, context)
-            self._handle_2d = bpy.types.SpaceView3D.draw_handler_add(draw_callback_2d, args, 'WINDOW', 'POST_PIXEL')
+            self.handle_2d = bpy.types.SpaceView3D.draw_handler_add(draw_callback_2d, args, 'WINDOW', 'POST_PIXEL')
 
             self.mouse_path = []
 
@@ -48,7 +47,7 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
             self.mouse_path.append((event.mouse_region_x, event.mouse_region_y))
 
         if event.type in {'RIGHTMOUSE', 'ESC'}:
-            bpy.types.SpaceView3D.draw_handler_remove(self._handle_2d, 'WINDOW')
+            bpy.types.SpaceView3D.draw_handler_remove(self.handle_2d, 'WINDOW')
             return {'CANCELLED'}
 
         return {'PASS_THROUGH'}

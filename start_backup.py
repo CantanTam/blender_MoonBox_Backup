@@ -30,6 +30,10 @@ class BA_OT_start_backup(bpy.types.Operator):
 
         has_backup_folder()
 
+        for item in bpy.data.objects:
+            if item.ba_data.object_type == 'DUPLICATE':
+                item.hide_set(False)
+
         origin_edit_mode = context.object.mode
         origin_object = context.active_object
 
@@ -66,7 +70,9 @@ class BA_OT_start_backup(bpy.types.Operator):
 
         # 生成 backup_uuid 区分每个备份件
         backup_uuids = {
-            item.ba_data for item in bpy.data.objects if item.ba_data.object_type == "ORIGIN" 
+            item.ba_data.object_uuid
+            for item in bpy.data.objects 
+            if item.ba_data.object_type == "ORIGIN" 
             and item.ba_data.object_uuid == origin_object.ba_data.object_uuid}
         
         while True:
@@ -207,13 +213,15 @@ class BA_OT_start_backup(bpy.types.Operator):
                     os.remove(os.path.join(snapshot_dir, item))
 
 
-
-        
         list_backup_with_origin()
 
-        progress_notice("test.png")
-
         bpy.ops.wm.show_backup()
+
+        for item in bpy.data.objects:
+            if item.ba_data.object_type == 'DUPLICATE':
+                item.hide_set(True)
+
+        progress_notice("test.png")
 
         self.report({'INFO'}, "测试指定备份副本数")
         
