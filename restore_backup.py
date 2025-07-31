@@ -87,7 +87,7 @@ class BA_OT_restore_backup(bpy.types.Operator):
         restore_object.select_set(True)
         bpy.context.view_layer.objects.active = restore_object
 
-        bpy.data.collections["BACKUP"].hide_select = True
+        #bpy.data.collections["BACKUP"].hide_select = True
         bpy.data.collections["BACKUP"].hide_viewport = True
         bpy.data.collections["BACKUP"].hide_render = True
         bpy.context.view_layer.layer_collection.children['BACKUP'].hide_viewport = True

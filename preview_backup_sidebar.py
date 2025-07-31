@@ -76,10 +76,7 @@ class BA_PT_backup_snapshot_sidebar(bpy.types.Panel):
         current_snapshot = current_backup.ba_data.object_uuid + "_" + current_backup.ba_data.backup_uuid
 
         layout = self.layout
-        if bpy.context.mode != 'OBJECT':
-            box = layout.box()
-            box.label(text="请切换至物体模式使用预览功能",icon='INFO')
-        elif context.active_object and backup_snapshots and current_snapshot in backup_snapshots:
+        if context.active_object and backup_snapshots and current_snapshot in backup_snapshots:
             box = layout.box()  # 创建一个带边框的区域
             box.template_icon(icon_value=backup_snapshots[current_snapshot].icon_id, scale=10)
             row = layout.row(align=True)
