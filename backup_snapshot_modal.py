@@ -91,6 +91,11 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
     def modal(self, context, event):
         context.area.tag_redraw()
 
+        #if event.type == 'LEFTMOUSE' and event.ctrl == True:
+        #    bpy.ops.object.mode_set(mode='OBJECT')
+
+
+
         if event.type == 'WHEELUPMOUSE' and event.ctrl == True:
             self.current_object_index -= 1
 
@@ -114,8 +119,6 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
 
             bpy.ops.object.mode_set(mode=self.current_edit_mode)
 
-            bpy.context.area.tag_redraw()
-
         if event.type == 'WHEELDOWNMOUSE' and event.ctrl == True:
             self.current_object_index += 1
 
@@ -136,18 +139,13 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
 
             bpy.ops.object.mode_set(mode=self.current_edit_mode)
 
-            bpy.context.area.tag_redraw()
-
         if event.type in {'RIGHTMOUSE','ESC'}:
             global realtime_preview_statu
 
             bpy.ops.object.mode_set(mode='OBJECT')
 
             for index,object in self.realtime_previews.items():
-                if index == self.preview_count:
-                    object.hide_set(False)
-                else:
-                    object.hide_set(True)
+                object.hide_set(False)
 
             bpy.ops.object.select_all(action='DESELECT')
             self.realtime_previews[self.preview_count].select_set(True)
@@ -160,7 +158,9 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
             bpy.ops.object.mode_set(mode=self.current_edit_mode)
 
             bpy.types.SpaceView3D.draw_handler_remove(self.handle_2d, 'WINDOW')
-            bpy.context.area.tag_redraw()
+
+            bpy.context.view_layer.layer_collection.children['BACKUP'].hide_viewport = True
+
             self.report({'INFO'},'YES')
             return {'CANCELLED'}
 

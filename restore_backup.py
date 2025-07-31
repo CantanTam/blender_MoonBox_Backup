@@ -58,6 +58,10 @@ class BA_OT_restore_backup(bpy.types.Operator):
         bpy.context.active_object.use_fake_user = False        
 
         if self.has_origin_object:
+            for item in bpy.data.objects:
+                if item.ba_data.object_uuid == context.active_object.ba_data.object_uuid and item.ba_data.object_type == 'ORIGIN':
+                    item.hide_set(False)
+                    
             collections = bpy.data.objects[self.origin_object_name].users_collection
 
             for coll in collections:
