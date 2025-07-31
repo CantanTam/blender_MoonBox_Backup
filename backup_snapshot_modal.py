@@ -3,6 +3,8 @@ import blf
 import gpu
 from gpu_extras.batch import batch_for_shader
 
+realtime_preview_statu = False
+
 class BA_OT_backup_snapshot_modal(bpy.types.Operator):
     bl_idname = "view3d.backup_snapshot_modal"
     bl_label = "实时查看备份快照"
@@ -50,6 +52,11 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
         gpu.state.blend_set('NONE')
 
     def invoke(self, context, event):
+        global realtime_preview_statu
+
+        realtime_preview_statu = True
+
+        self.current_edit_mode = context.active_object.mode
 
         self.realtime_previews = {
             int(item.name.rsplit(".", 1)[-1]): item
@@ -93,13 +100,21 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
             if self.current_object_index > self.preview_count:
                 self.current_object_index = self.preview_count
 
+            bpy.ops.object.mode_set(mode='OBJECT')
+
             for index,object in self.realtime_previews.items():
                 if index == self.current_object_index:
                     object.hide_set(False)
                 else:
                     object.hide_set(True)
 
-            self.report({'INFO'},f"{self.current_object_index}")
+            bpy.ops.object.select_all(action='DESELECT')
+            self.realtime_previews[self.current_object_index].select_set(True)
+            bpy.context.view_layer.objects.active = self.realtime_previews[self.current_object_index]
+
+            bpy.ops.object.mode_set(mode=self.current_edit_mode)
+
+            bpy.context.area.tag_redraw()
 
         if event.type == 'WHEELDOWNMOUSE' and event.ctrl == True:
             self.current_object_index += 1
@@ -107,16 +122,45 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
             if self.current_object_index > self.preview_count:
                 self.current_object_index = self.preview_count
 
+            bpy.ops.object.mode_set(mode='OBJECT')
+
             for index,object in self.realtime_previews.items():
                 if index == self.current_object_index:
                     object.hide_set(False)
                 else:
                     object.hide_set(True)
 
-            self.report({'INFO'},f"{self.current_object_index}")
+            bpy.ops.object.select_all(action='DESELECT')
+            self.realtime_previews[self.current_object_index].select_set(True)
+            bpy.context.view_layer.objects.active = self.realtime_previews[self.current_object_index]
+
+            bpy.ops.object.mode_set(mode=self.current_edit_mode)
+
+            bpy.context.area.tag_redraw()
 
         if event.type in {'RIGHTMOUSE','ESC'}:
+            global realtime_preview_statu
+
+            bpy.ops.object.mode_set(mode='OBJECT')
+
+            for index,object in self.realtime_previews.items():
+                if index == self.preview_count:
+                    object.hide_set(False)
+                else:
+                    object.hide_set(True)
+
+            bpy.ops.object.select_all(action='DESELECT')
+            self.realtime_previews[self.preview_count].select_set(True)
+            bpy.context.view_layer.objects.active = self.realtime_previews[self.preview_count]
+
+            bpy.context.view_layer.layer_collection.children['BACKUP'].hide_viewport = True
+
+            realtime_preview_statu = False
+
+            bpy.ops.object.mode_set(mode=self.current_edit_mode)
+
             bpy.types.SpaceView3D.draw_handler_remove(self.handle_2d, 'WINDOW')
+            bpy.context.area.tag_redraw()
             self.report({'INFO'},'YES')
             return {'CANCELLED'}
 

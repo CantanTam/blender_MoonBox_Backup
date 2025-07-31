@@ -3,6 +3,7 @@ import bpy.utils.previews
 import webbrowser
 import os
 from . import ADDON_NAME
+from .import backup_snapshot_modal as modal
 
 backup_snapshots = None
 is_snapshot_loaded = False
@@ -76,7 +77,7 @@ class BA_PT_backup_snapshot_sidebar(bpy.types.Panel):
         current_snapshot = current_backup.ba_data.object_uuid + "_" + current_backup.ba_data.backup_uuid
 
         layout = self.layout
-        if context.active_object.ba_data.object_uuid == "":
+        if context.active_object.ba_data.object_uuid == "" or modal.realtime_preview_statu:
             return
         
         if context.active_object and backup_snapshots and current_snapshot in backup_snapshots:
