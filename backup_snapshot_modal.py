@@ -2,6 +2,8 @@ import bpy
 import blf
 import gpu
 from gpu_extras.batch import batch_for_shader
+from .func_list_backup import list_all_backup,list_backup_with_origin
+from .func_remove_unlinked import remove_all_unlinked
 
 realtime_preview_statu = False
 
@@ -53,8 +55,10 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
 
     def invoke(self, context, event):
         global realtime_preview_statu
-
         realtime_preview_statu = True
+
+        bpy.ops.wm.show_backup()
+
 
         self.current_edit_mode = context.active_object.mode
 
@@ -95,6 +99,11 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
         if event.type == 'LEFTMOUSE' and event.ctrl == True:
             bpy.ops.object.mode_set(mode='OBJECT')
 
+            list_all_backup()
+
+            bpy.data.collections["BACKUP"].hide_viewport = False
+            bpy.data.collections["BACKUP"].hide_render = False
+
             bpy.ops.object.select_all(action='DESELECT')
             self.realtime_previews[self.current_object_index].select_set(True)
             bpy.context.view_layer.objects.active = self.realtime_previews[self.current_object_index]
@@ -102,7 +111,43 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
             for index, object in self.realtime_previews.items():
                 object.hide_set(False)
 
+            # 重写一次恢复操作
+            origin_object_name = self.realtime_previews[self.preview_count].name
+            origin_object_data_name = self.realtime_previews[self.preview_count].data.name
+
+            bpy.ops.object.duplicate()
+
+            restore_object = context.active_object
+
+            context.active_object.ba_data.object_type = "ORIGIN"
+            context.active_object.ba_data.backup_uuid = ""
+            context.active_object.use_fake_user = False  
+
+            collections = self.realtime_previews[self.preview_count].users_collection
+
+            for coll in collections:
+                coll.objects.link(context.active_object)
+
+            bpy.data.collections["BACKUP"].objects.unlink(context.active_object)
+
+            bpy.ops.object.select_all(action='DESELECT')
+            bpy.data.objects[origin_object_name].select_set(True)
+            bpy.context.view_layer.objects.active = bpy.data.objects[origin_object_name]
+            bpy.ops.object.delete()
+
+            remove_all_unlinked()
+
+            restore_object.name = origin_object_name
+            restore_object.data.name = origin_object_data_name
+
+            restore_object.select_set(True)
+            context.view_layer.objects.active = restore_object
+
+            bpy.data.collections["BACKUP"].hide_viewport = True
+            bpy.data.collections["BACKUP"].hide_render = True
             bpy.context.view_layer.layer_collection.children['BACKUP'].hide_viewport = True
+
+            list_backup_with_origin()
 
             bpy.ops.object.mode_set(mode=self.current_edit_mode)
 

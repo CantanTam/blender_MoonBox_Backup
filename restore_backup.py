@@ -24,7 +24,8 @@ class BA_OT_restore_backup(bpy.types.Operator):
     def invoke(self, context, event):
         origin_name_uuids = {
             item.ba_data.object_uuid: item.name
-            for item in bpy.data.objects if item.ba_data.object_type == 'ORIGIN'
+            for item in bpy.data.objects 
+            if item.ba_data.object_type == 'ORIGIN'
             and item.ba_data.object_uuid != "" }
         
         if context.active_object.ba_data.object_uuid in origin_name_uuids:
@@ -40,7 +41,7 @@ class BA_OT_restore_backup(bpy.types.Operator):
 
         list_all_backup()
 
-        bpy.data.collections["BACKUP"].hide_select = False
+        #bpy.data.collections["BACKUP"].hide_select = False
         bpy.data.collections["BACKUP"].hide_viewport = False
         bpy.data.collections["BACKUP"].hide_render = False
         bpy.context.view_layer.layer_collection.children['BACKUP'].hide_viewport = False
@@ -61,7 +62,7 @@ class BA_OT_restore_backup(bpy.types.Operator):
             for item in bpy.data.objects:
                 if item.ba_data.object_uuid == context.active_object.ba_data.object_uuid and item.ba_data.object_type == 'ORIGIN':
                     item.hide_set(False)
-                    
+
             collections = bpy.data.objects[self.origin_object_name].users_collection
 
             for coll in collections:
