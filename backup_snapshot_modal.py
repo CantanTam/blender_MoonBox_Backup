@@ -33,16 +33,18 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
         batch = batch_for_shader(shader, 'TRIS', {"pos": vertices}, indices=indices)
 
         # 定义文本参数
+        blf.size(0, 30*(bpy.context.preferences.system.dpi/72))
+
         text_width, _ = blf.dimensions(0, text_info)
         draw_text_width = (width - text_width)/2
-        blf.size(0, 30*(bpy.context.preferences.system.dpi/72))
-        blf.position(0, draw_text_width, 10, 0)
 
         gpu.state.blend_set('ALPHA')
 
         shader.bind()
         shader.uniform_float("color",  background)
         batch.draw(shader)
+
+        blf.position(0, draw_text_width, 10, 0)
         blf.draw(0, text_info)
 
         gpu.state.blend_set('NONE')

@@ -76,6 +76,9 @@ class BA_PT_backup_snapshot_sidebar(bpy.types.Panel):
         current_snapshot = current_backup.ba_data.object_uuid + "_" + current_backup.ba_data.backup_uuid
 
         layout = self.layout
+        if context.active_object.ba_data.object_uuid == "":
+            return
+        
         if context.active_object and backup_snapshots and current_snapshot in backup_snapshots:
             box = layout.box()  # 创建一个带边框的区域
             box.template_icon(icon_value=backup_snapshots[current_snapshot].icon_id, scale=10)
@@ -85,8 +88,7 @@ class BA_PT_backup_snapshot_sidebar(bpy.types.Panel):
             row.operator("view3d.right_backup", text="▶")
         else:
             box = layout.box()
-            box.label(text="选中备份文件进行预览", icon='INFO')
-            box.operator("view3d.backup_snapshot_modal",text="测试文字/规形", icon='GREASEPENCIL')
+            box.operator("view3d.backup_snapshot_modal",text="▶启动实时预览")
 
 
 class BA_OT_left_backup(bpy.types.Operator):
