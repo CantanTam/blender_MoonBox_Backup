@@ -37,6 +37,7 @@ class BA_OT_restore_backup(bpy.types.Operator):
         return context.window_manager.invoke_props_dialog(self)
     
     def execute(self, context):
+
         list_all_backup()
 
         bpy.data.collections["BACKUP"].hide_select = False

@@ -30,10 +30,6 @@ class BA_OT_start_backup(bpy.types.Operator):
 
         has_backup_folder()
 
-        for item in bpy.data.objects:
-            if item.ba_data.object_type == 'DUPLICATE':
-                item.hide_set(False)
-
         origin_edit_mode = context.object.mode
         origin_object = context.active_object
 
@@ -216,10 +212,6 @@ class BA_OT_start_backup(bpy.types.Operator):
         list_backup_with_origin()
 
         bpy.ops.wm.show_backup()
-
-        for item in bpy.data.objects:
-            if item.ba_data.object_type == 'DUPLICATE':
-                item.hide_set(True)
 
         progress_notice("test.png")
 
