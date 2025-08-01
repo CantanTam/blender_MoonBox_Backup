@@ -33,6 +33,11 @@ class BA_OT_show_backup_without_origin(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
+        bpy.data.collections["BACKUP"].hide_viewport = False
+
+        clear_backup_snapshots()
+
+        sync_origin_backup_name()
 
         list_backup_without_origin()
         

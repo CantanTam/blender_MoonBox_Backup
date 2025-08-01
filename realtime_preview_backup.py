@@ -17,7 +17,7 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        return context.active_object.ba_data.object_uuid != ""
+        return context.active_object.ba_data.object_uuid != "" and context.active_object.ba_data.object_type == "ORIGIN"
 
     @staticmethod
     def draw_text_background(self,context):
