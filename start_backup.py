@@ -7,7 +7,6 @@ from .func_detect_backup_statu import is_in_backup_list
 from .func_detect_change import is_edit_change
 from .func_sync_name import sync_origin_backup_name
 from .func_list_backup import list_all_backup,list_backup_with_origin
-
 from .saving_notice import progress_notice
 
 class BA_OT_start_backup(bpy.types.Operator):
