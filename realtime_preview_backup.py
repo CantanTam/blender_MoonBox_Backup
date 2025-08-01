@@ -1,6 +1,7 @@
 import bpy
 import blf
 import gpu
+from . import ADDON_NAME
 from gpu_extras.batch import batch_for_shader
 from .func_list_backup import list_all_backup,list_backup_with_origin
 from .func_remove_unlinked import remove_all_unlinked
@@ -57,6 +58,10 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
     def invoke(self, context, event):
         global realtime_preview_statu
         realtime_preview_statu = True
+
+        #需要关闭自动备份
+        self.auto_backup_statu = context.preferences.addons[ADDON_NAME].preferences.use_auto_backup
+        context.preferences.addons[ADDON_NAME].preferences.use_auto_backup = False
 
         bpy.ops.wm.show_backup()
 
@@ -157,6 +162,8 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
 
                 realtime_preview_statu = False
 
+                context.preferences.addons[ADDON_NAME].preferences.use_auto_backup = self.auto_backup_statu
+
                 progress_notice("RESTORE.png")
 
                 return {'FINISHED'}
@@ -223,6 +230,8 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
             bpy.types.SpaceView3D.draw_handler_remove(self.handle_2d, 'WINDOW')
 
             bpy.context.view_layer.layer_collection.children['BACKUP'].hide_viewport = True
+
+            context.preferences.addons[ADDON_NAME].preferences.use_auto_backup = self.auto_backup_statu
 
             return {'CANCELLED'}
 

@@ -40,6 +40,9 @@ class BA_OT_restore_backup(bpy.types.Operator):
     
     def execute(self, context):
 
+        auto_backup_statu = context.preferences.addons[ADDON_NAME].preferences.use_auto_backup
+        context.preferences.addons[ADDON_NAME].preferences.use_auto_backup = False
+
         list_all_backup()
 
         #bpy.data.collections["BACKUP"].hide_select = False
@@ -101,6 +104,8 @@ class BA_OT_restore_backup(bpy.types.Operator):
         list_backup_with_origin()
 
         bpy.ops.wm.show_backup()
+
+        context.preferences.addons[ADDON_NAME].preferences.use_auto_backup = auto_backup_statu
 
         progress_notice("RESTORE.png")
 
