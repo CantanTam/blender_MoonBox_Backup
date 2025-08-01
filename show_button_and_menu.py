@@ -17,13 +17,8 @@ def draw_outliner_header_button(self, context):
         if prefs.show_auto_backup:
             row.prop(prefs, "use_auto_backup",icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
             
-        if prefs.backup_preview_button:
-            row.prop(prefs, "backup_preview",
-                    icon_value=(
-                        load_custom_icons.custom_icons["PREVIEW_ON"].icon_id 
-                        if prefs.backup_preview 
-                        else load_custom_icons.custom_icons["PREVIEW_OFF"].icon_id), 
-                    )
+        if prefs.backup_list_style:
+            row.operator("wm.show_backup_withou_origin",icon_value=load_custom_icons.custom_icons["PREVIEW_ON"].icon_id, text="")
     
         row.popover(panel="bak.backup_setting", text="")
 

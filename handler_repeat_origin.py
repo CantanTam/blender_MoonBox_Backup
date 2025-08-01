@@ -2,7 +2,7 @@ import bpy
 
 class BA_OT_handle_repeat_uuid(bpy.types.Operator):
     bl_idname = "bak.handler_repeat_uuid"
-    bl_label = "自定义对话框"
+    bl_label = "处理重复uuid"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -51,4 +51,33 @@ class BA_OT_remove_self_uuid(bpy.types.Operator):
         bpy.ops.wm.start_backup()
 
         return {'FINISHED'}
+    
+class BA_OT_handle_conflict_name(bpy.types.Operator):
+    bl_idname = "bak.handler_conflict_name"
+    bl_label = "重命名当前"
+    bl_options = {'REGISTER', 'UNDO'}
 
+    def execute(self, context):
+        return {'FINISHED'}
+
+    def draw(self, context):
+        layout = self.layout
+        layout.label(text="当前文件与残留备份文件名字冲突", icon="ERROR")
+        
+        row = layout.row()
+        row.operator("bak.rename_conflict_object", text="重命名当前物体", icon="GREASEPENCIL")
+
+    def invoke(self, context, event):
+        return context.window_manager.invoke_popup(self, width=100)
+
+
+class BA_OT_rename_conflict_object(bpy.types.Operator):
+    bl_idname = "bak.rename_conflict_object"
+    bl_label = "重命名名字冲突对象"
+    bl_description = "当前原文件名字与残留的备份文件名字冲突"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        bpy.ops.wm.call_panel(name="TOPBAR_PT_name", keep_open=False)
+
+        return {'FINISHED'}

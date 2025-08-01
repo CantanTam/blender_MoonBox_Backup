@@ -38,18 +38,6 @@ class BA_OT_preference(bpy.types.AddonPreferences):
         ],
         default='INCREASE',
 )
-    
-    backup_preview:bpy.props.BoolProperty(
-        name="",
-        description="实时显示选中备份对象",
-        default=True,
-    )
-
-    backup_preview_button:bpy.props.BoolProperty(
-        name="",
-        description="是否在大纲视窗头部栏显示实时预览按钮",
-        default=True,
-    )
 
     right_click_backup:bpy.props.BoolProperty(
         name="",
@@ -67,6 +55,12 @@ class BA_OT_preference(bpy.types.AddonPreferences):
         name="",
         description="启用自动备份功能",
         default=False,
+    )
+
+    backup_list_style:bpy.props.BoolProperty(
+        name="",
+        description="在大纲头栏显示备份列出类型",
+        default=True,
     )
 
     auto_backup_interval:bpy.props.FloatProperty(
@@ -124,13 +118,6 @@ class BA_OT_preference(bpy.types.AddonPreferences):
         row = col_right.row(align=True)
         row.prop(self, "custom_suffix", text="")  # 属性不重复 label
         row.operator("wm.start_backup", text="", icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
-
-        split = layout.split(factor=0.2)
-        col_left = split.column()
-        col_right = split.column()
-
-        col_left.label(text="预览按钮")
-        col_right.prop(self, "backup_preview_button")
 
         split = layout.split(factor=0.2)
         col_left = split.column()
