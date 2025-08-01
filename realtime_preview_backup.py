@@ -97,65 +97,66 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
         context.area.tag_redraw()
 
         if event.type == 'LEFTMOUSE' and event.ctrl == True:
-            bpy.ops.object.mode_set(mode='OBJECT')
+            if context.active_object != self.realtime_previews[self.preview_count]:
+                bpy.ops.object.mode_set(mode='OBJECT')
 
-            list_all_backup()
+                list_all_backup()
 
-            bpy.data.collections["BACKUP"].hide_viewport = False
-            bpy.data.collections["BACKUP"].hide_render = False
+                bpy.data.collections["BACKUP"].hide_viewport = False
+                bpy.data.collections["BACKUP"].hide_render = False
 
-            bpy.ops.object.select_all(action='DESELECT')
-            self.realtime_previews[self.current_object_index].select_set(True)
-            bpy.context.view_layer.objects.active = self.realtime_previews[self.current_object_index]
+                bpy.ops.object.select_all(action='DESELECT')
+                self.realtime_previews[self.current_object_index].select_set(True)
+                bpy.context.view_layer.objects.active = self.realtime_previews[self.current_object_index]
 
-            for index, object in self.realtime_previews.items():
-                object.hide_set(False)
+                for index, object in self.realtime_previews.items():
+                    object.hide_set(False)
 
-            # 重写一次恢复操作
-            origin_object_name = self.realtime_previews[self.preview_count].name
-            origin_object_data_name = self.realtime_previews[self.preview_count].data.name
+                # 重写一次恢复操作
+                origin_object_name = self.realtime_previews[self.preview_count].name
+                origin_object_data_name = self.realtime_previews[self.preview_count].data.name
 
-            bpy.ops.object.duplicate()
+                bpy.ops.object.duplicate()
 
-            restore_object = context.active_object
+                restore_object = context.active_object
 
-            context.active_object.ba_data.object_type = "ORIGIN"
-            context.active_object.ba_data.backup_uuid = ""
-            context.active_object.use_fake_user = False  
+                context.active_object.ba_data.object_type = "ORIGIN"
+                context.active_object.ba_data.backup_uuid = ""
+                context.active_object.use_fake_user = False  
 
-            collections = self.realtime_previews[self.preview_count].users_collection
+                collections = self.realtime_previews[self.preview_count].users_collection
 
-            for coll in collections:
-                coll.objects.link(context.active_object)
+                for coll in collections:
+                    coll.objects.link(context.active_object)
 
-            bpy.data.collections["BACKUP"].objects.unlink(context.active_object)
+                bpy.data.collections["BACKUP"].objects.unlink(context.active_object)
 
-            bpy.ops.object.select_all(action='DESELECT')
-            bpy.data.objects[origin_object_name].select_set(True)
-            bpy.context.view_layer.objects.active = bpy.data.objects[origin_object_name]
-            bpy.ops.object.delete()
+                bpy.ops.object.select_all(action='DESELECT')
+                bpy.data.objects[origin_object_name].select_set(True)
+                bpy.context.view_layer.objects.active = bpy.data.objects[origin_object_name]
+                bpy.ops.object.delete()
 
-            remove_all_unlinked()
+                remove_all_unlinked()
 
-            restore_object.name = origin_object_name
-            restore_object.data.name = origin_object_data_name
+                restore_object.name = origin_object_name
+                restore_object.data.name = origin_object_data_name
 
-            restore_object.select_set(True)
-            context.view_layer.objects.active = restore_object
+                restore_object.select_set(True)
+                context.view_layer.objects.active = restore_object
 
-            bpy.data.collections["BACKUP"].hide_viewport = True
-            bpy.data.collections["BACKUP"].hide_render = True
-            bpy.context.view_layer.layer_collection.children['BACKUP'].hide_viewport = True
+                bpy.data.collections["BACKUP"].hide_viewport = True
+                bpy.data.collections["BACKUP"].hide_render = True
+                bpy.context.view_layer.layer_collection.children['BACKUP'].hide_viewport = True
 
-            list_backup_with_origin()
+                list_backup_with_origin()
 
-            bpy.ops.object.mode_set(mode=self.current_edit_mode)
+                bpy.ops.object.mode_set(mode=self.current_edit_mode)
 
-            bpy.types.SpaceView3D.draw_handler_remove(self.handle_2d, 'WINDOW')
+                bpy.types.SpaceView3D.draw_handler_remove(self.handle_2d, 'WINDOW')
 
-            realtime_preview_statu = False
+                realtime_preview_statu = False
 
-            return {'FINISHED'}
+                return {'FINISHED'}
 
         if event.type == 'WHEELUPMOUSE' and event.ctrl == True:
             self.current_object_index -= 1

@@ -3,7 +3,7 @@ import bpy.utils.previews
 import webbrowser
 import os
 from . import ADDON_NAME
-from .import backup_snapshot_modal as modal
+from .import realtime_preview_backup as modal
 
 backup_snapshots = None
 is_snapshot_loaded = False

@@ -59,7 +59,7 @@ from .preview_backup_sidebar import (
 
 from .open_web import BAK_OT_open_website
 
-from .backup_snapshot_modal import BA_OT_backup_snapshot_modal
+from .realtime_preview_backup import BA_OT_backup_snapshot_modal
 
 
 def register_keymaps():
