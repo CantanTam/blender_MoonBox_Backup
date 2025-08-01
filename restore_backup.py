@@ -3,6 +3,7 @@ import datetime
 from . import ADDON_NAME
 from .func_remove_unlinked import remove_all_unlinked
 from .func_list_backup import list_all_backup,list_backup_with_origin
+from .progress_notice import progress_notice
 
 class BA_OT_restore_backup(bpy.types.Operator):
     bl_idname = "bak.restore_backup"
@@ -100,6 +101,8 @@ class BA_OT_restore_backup(bpy.types.Operator):
         list_backup_with_origin()
 
         bpy.ops.wm.show_backup()
+
+        progress_notice("RESTORE.png")
 
         return {'FINISHED'}
 

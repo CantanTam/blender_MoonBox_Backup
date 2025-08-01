@@ -4,6 +4,7 @@ import gpu
 from gpu_extras.batch import batch_for_shader
 from .func_list_backup import list_all_backup,list_backup_with_origin
 from .func_remove_unlinked import remove_all_unlinked
+from .progress_notice import progress_notice
 
 realtime_preview_statu = False
 
@@ -155,6 +156,8 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
                 bpy.types.SpaceView3D.draw_handler_remove(self.handle_2d, 'WINDOW')
 
                 realtime_preview_statu = False
+
+                progress_notice("RESTORE.png")
 
                 return {'FINISHED'}
 

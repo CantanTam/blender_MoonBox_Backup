@@ -113,6 +113,7 @@ def register():
     bpy.utils.register_class(BA_OT_restore_backup)
     bpy.utils.register_class(BA_OT_show_backup)
     bpy.utils.register_class(BA_OT_show_backup_without_origin)
+    bpy.utils.register_class(BA_OT_backup_snapshot_modal)
     bpy.utils.register_class(BA_PT_backup_setting)
     bpy.types.OUTLINER_HT_header.prepend(draw_outliner_header_button)
     bpy.types.OUTLINER_MT_object.append(draw_list_unlist_backup)
@@ -126,13 +127,13 @@ def register():
     register_keymaps()
 
     bpy.utils.register_class(BAK_OT_open_website)
-    bpy.utils.register_class(BA_OT_backup_snapshot_modal)
+    
 
 
 
 
 def unregister():
-    bpy.utils.unregister_class(BA_OT_backup_snapshot_modal)
+    
     bpy.utils.unregister_class(BAK_OT_open_website)
 
     unregister_keymaps()
@@ -146,6 +147,7 @@ def unregister():
     bpy.types.OUTLINER_MT_object.remove(draw_list_unlist_backup)
     bpy.types.OUTLINER_HT_header.remove(draw_outliner_header_button)
     bpy.utils.unregister_class(BA_PT_backup_setting)
+    bpy.utils.unregister_class(BA_OT_backup_snapshot_modal)
     bpy.utils.unregister_class(BA_OT_show_backup_without_origin)
     bpy.utils.unregister_class(BA_OT_show_backup)
     bpy.utils.unregister_class(BA_OT_restore_backup)

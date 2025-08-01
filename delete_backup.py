@@ -1,6 +1,7 @@
 import bpy
 import os
 from .func_remove_unlinked import remove_all_unlinked
+from .progress_notice import progress_notice
 
 class BA_OT_delete_backup(bpy.types.Operator):
     bl_idname = "bak.delete_backup"
@@ -33,5 +34,7 @@ class BA_OT_delete_backup(bpy.types.Operator):
         bpy.context.active_object.ba_data.object_uuid = ""
 
         remove_all_unlinked()
+
+        progress_notice("DELETE.png")
 
         return {'FINISHED'}

@@ -10,9 +10,6 @@ class BackupNotice:
         self.needs_redraw = False
         self.draw_handler = None
 
-        # 固定缩放系数
-        self.scale_factor = 1.0
-
         # 使用固定 notices 文件夹
         if not os.path.isabs(self.image_path):
             script_dir = os.path.dirname(os.path.realpath(__file__))
@@ -35,18 +32,18 @@ class BackupNotice:
         area_width = bpy.context.area.width
         area_height = bpy.context.area.height
 
-        self.left = (area_width - 480) // 2
-        self.right = self.left + 480
+        self.left = (area_width - 150) // 2
+        self.right = self.left + 150
 
         asset_shelf_height = self.get_asset_shelf_height()
-        height = asset_shelf_height + 15
+        height = asset_shelf_height + 0 # 底部向上的偏移量
 
         self.vertices = {
             "pos": [
                 (self.left, height),
                 (self.right, height),
-                (self.right, 80 + height),
-                (self.left, 80 + height)
+                (self.right, 20 + height),
+                (self.left, 20 + height)
             ],
             "texCoord": [(0, 0), (1, 0), (1, 1), (0, 1)],
         }
@@ -73,13 +70,13 @@ class BackupNotice:
     def update_asset_shelf_height(self):
         asset_shelf_height = self.get_asset_shelf_height()
         area_height = bpy.context.area.height
-        height = asset_shelf_height + 15
+        height = asset_shelf_height + 0 # 底部向上偏移量
 
         new_pos = [
             (self.left, height),
             (self.right, height),
-            (self.right, 80 + height),
-            (self.left, 80 + height),
+            (self.right, 20 + height),
+            (self.left, 20 + height),
         ]
         self.vertices["pos"] = new_pos
         self.batch = batch_for_shader(self.shader, 'TRI_FAN', self.vertices)
