@@ -10,8 +10,8 @@ class BA_PT_backup_setting(bpy.types.Panel):
     def draw(self, context):
         prefs = context.preferences.addons[ADDON_NAME].preferences
         layout = self.layout
-
-        split = layout.split(factor=0.3)
+        
+        split = layout.split(factor=0.25)
         col_left = split.column()
         col_left.alignment = 'LEFT'
         col_right = split.column()
@@ -21,14 +21,14 @@ class BA_PT_backup_setting(bpy.types.Panel):
 
         if prefs.show_auto_backup:
 
-            split = layout.split(factor=0.3)
+            split = layout.split(factor=0.25)
             col_left = split.column()
             col_right = split.column()
 
             col_left.label(text="备份间隔")
             col_right.prop(prefs, "auto_backup_interval")
 
-        split = layout.split(factor=0.3)
+        split = layout.split(factor=0.25)
         col_left = split.column()
         col_right = split.column()
 
@@ -39,28 +39,28 @@ class BA_PT_backup_setting(bpy.types.Panel):
         row.separator()
         row.operator("wm.start_backup", text="", icon="FILE_REFRESH")
 
-        split = layout.split(factor=0.3)
+        split = layout.split(factor=0.25)
         col_left = split.column()
         col_right = split.column()
 
         col_left.label(text="右键备份")
         col_right.prop(prefs, "right_click_backup")
 
-        split = layout.split(factor=0.3)
+        split = layout.split(factor=0.25)
         col_left = split.column()
         col_right = split.column()
 
         col_left.label(text="副本数量")
         col_right.prop(prefs, "backup_copies_count")
 
-        split = layout.split(factor=0.3)
+        split = layout.split(factor=0.25)
         col_left = split.column()
         col_right = split.column()
 
         col_left.label(text="检测间隔")
         col_right.prop(prefs, "detect_rename_interval",icon="ADD")
 
-        split = layout.split(factor=0.3)
+        split = layout.split(factor=0.25)
         col_left = split.column()
         col_right = split.column()
 
@@ -69,4 +69,9 @@ class BA_PT_backup_setting(bpy.types.Panel):
         row.operator("wm.start_backup", text="", icon="FILE_REFRESH")
         row.operator("wm.start_backup", text="", icon="FILE_REFRESH")
 
-        layout.operator("bak.open_website",text="🌐本插件B站教程")
+        box = layout.box()
+        row = box.row(align=True)
+        row.operator("bak.open_website",text="🌐本插件B站教程")
+        row.operator("bak.open_website",text="🌐本插件B站教程")
+
+        box.operator("bak.open_website",text="🌐本插件B站教程")
