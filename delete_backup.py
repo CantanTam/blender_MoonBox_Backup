@@ -66,7 +66,9 @@ class BA_OT_del_name_conflict_duplicate(bpy.types.Operator):
                 and item.name.split(item.ba_data.backup_infix)[0] == current_object.name \
                 and item.ba_data.object_uuid not in backup_uuids:
 
-                os.remove(os.path.join(snapshot_dir, item.ba_data.object_uuid + "_" + item.ba_data.backup_uuid + ".jpg"))
+                if os.path.exists(os.path.join(snapshot_dir, item.ba_data.object_uuid + "_" + item.ba_data.backup_uuid + ".jpg")):
+                    os.remove(os.path.join(snapshot_dir, item.ba_data.object_uuid + "_" + item.ba_data.backup_uuid + ".jpg"))
+                
                 bpy.data.objects.remove(item, do_unlink=True)
 
                 delete_count += 1

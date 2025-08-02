@@ -68,3 +68,5 @@ class BA_PT_backup_setting(bpy.types.Panel):
         row = col_right.row(align=True)
         row.operator("wm.start_backup", text="", icon="FILE_REFRESH")
         row.operator("wm.start_backup", text="", icon="FILE_REFRESH")
+
+        layout.operator("bak.open_website",text="🌐本插件B站教程")
