@@ -32,6 +32,10 @@ class BA_OT_show_backup_without_origin(bpy.types.Operator):
     bl_description = "列出全部"
     bl_options = {'REGISTER', 'UNDO'}
 
+    @classmethod
+    def poll(cls, context):
+        return "BACKUP" in {coll.name for coll in bpy.context.scene.collection.children}
+
     def execute(self, context):
         bpy.data.collections["BACKUP"].hide_viewport = False
 

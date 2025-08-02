@@ -62,7 +62,7 @@ class BA_PT_backup_snapshot_sidebar(bpy.types.Panel):
     bl_idname = "bak.backup_snapshot_sidebar"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = "Preview"
+    bl_category = "Moonbox"
 
     def draw(self, context):
         global is_snapshot_loaded
@@ -86,7 +86,7 @@ class BA_PT_backup_snapshot_sidebar(bpy.types.Panel):
             row.operator("view3d.right_backup", text="▶")
         else:
             box = layout.box()
-            box.operator("view3d.backup_snapshot_modal",text="▶启动实时预览")
+            box.operator("view3d.backup_snapshot_modal",text="▶实时预览备份")
 
 
 class BA_OT_left_backup(bpy.types.Operator):

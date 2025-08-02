@@ -27,7 +27,6 @@ class BA_OT_preference(bpy.types.AddonPreferences):
         description="设定保留的最近备份的副本数量，0 为无限次",
         default=0,
         min=0,
-        soft_max=5,
     )
 
     right_click_backup:bpy.props.BoolProperty(
@@ -62,15 +61,3 @@ class BA_OT_preference(bpy.types.AddonPreferences):
         subtype='TIME',
         
     )
-
-    detect_change_interval:bpy.props.FloatProperty(
-        name="",
-        description="后台检测重命名、添加、删除状态变化的时间间隔，单位为秒",
-        default=1.0,
-        min=0.1,
-        max=10,
-        soft_max=2,
-        precision=1,
-    )
-
-

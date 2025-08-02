@@ -1,5 +1,7 @@
 import bpy
 from . import ADDON_NAME
+from . import load_custom_icons
+
 
 class BA_PT_backup_setting(bpy.types.Panel):
     bl_idname = "bak.backup_setting"
@@ -24,9 +26,9 @@ class BA_PT_backup_setting(bpy.types.Panel):
 
         col_left.label(text="显示选项")
         row = col_right.row()
-        row.prop(prefs, "show_auto_backup")
-        row.prop(prefs, "list_leftover_backup")
-        row.prop(prefs, "right_click_backup")
+        row.prop(prefs, "show_auto_backup", icon="CHECKBOX_HLT" if prefs.show_auto_backup else "CHECKBOX_DEHLT")
+        row.prop(prefs, "list_leftover_backup", icon="CHECKBOX_HLT" if prefs.list_leftover_backup else "CHECKBOX_DEHLT")
+        row.prop(prefs, "right_click_backup", icon="CHECKBOX_HLT" if prefs.right_click_backup else "CHECKBOX_DEHLT")
 
         col_left.label(text="手动备份")
         row = col_right.row(align=True)
@@ -39,9 +41,8 @@ class BA_PT_backup_setting(bpy.types.Panel):
 
         col_left.label(text="自动备份")
         row = col_right.row(align=True)
-        row.enabled = prefs.use_auto_backup
-        row.prop(prefs, "detect_change_interval")
         row.prop(prefs, "auto_backup_interval")
+        row.prop(prefs, "use_auto_backup",icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id, text="")
 
         box = layout.box()
         row = box.row()
