@@ -45,8 +45,8 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
             text_info = "原件"
             background = (0, 1, 1, 0.1)
         elif bpy.context.active_object.ba_data.object_type == "DUPLICATE":
-            text_info = "备份文字信息占位符"
-            background = (1, 0, 1, 0.1)
+            text_info = "左键:恢复备份  |  Ctrl+滚轮:切换预览  |  右键:退出预览"
+            background = (1, 0, 0, 0.1)
 
         # 定义规形参数
         vertices = [(0, 0),(width, 0),(0, 70),(width, 70)]
@@ -56,7 +56,7 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
         batch = batch_for_shader(shader, 'TRIS', {"pos": vertices}, indices=indices)
 
         # 定义文本参数
-        blf.size(0, 30*(bpy.context.preferences.system.dpi/72))
+        blf.size(0, 25*(bpy.context.preferences.system.dpi/72))
 
         text_width, _ = blf.dimensions(0, text_info)
         draw_text_width = (width - text_width)/2
@@ -67,7 +67,7 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
         shader.uniform_float("color",  background)
         batch.draw(shader)
 
-        blf.position(0, draw_text_width, 10, 0)
+        blf.position(0, draw_text_width, 20, 0)
         blf.draw(0, text_info)
 
         gpu.state.blend_set('NONE')

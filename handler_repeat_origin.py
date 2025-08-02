@@ -13,7 +13,9 @@ class BA_OT_handle_repeat_uuid(bpy.types.Operator):
         layout.label(text="文件含有重复uuid，需处理后备份", icon="ERROR")
         
         row = layout.row()
+        row.alert = True
         row.operator("bak.remove_other_uuid", text="清除其它uuid", icon="TRASH")
+        row.alert = False
         row.operator("bak.remove_self_uuid", text="清除自身uuid", icon="TRASH")
 
     def invoke(self, context, event):
@@ -64,12 +66,14 @@ class BA_OT_handle_conflict_name(bpy.types.Operator):
         layout = self.layout
         layout.label(text="当前文件与残留备份文件名字冲突", icon="ERROR")
 
-        split = layout.split(factor=0.4)        
-        split.operator("bak.rename_conflict_object", text="重命名物体", icon="GREASEPENCIL")
-        split.operator("bak.del_name_conflict_duplicate", text="清除名字冲突备份件", icon="TRASH")
+        split = layout.split(factor=0.62)        
+        split.alert = True
+        split.operator("bak.del_name_conflict_backup", text="清除名字冲突备份件", icon="TRASH")
+        split.alert = False
+        split.operator("bak.rename_conflict_object", text="重命名物体", icon="GREASEPENCIL",depress=True)
 
     def invoke(self, context, event):
-        return context.window_manager.invoke_popup(self, width=250)
+        return context.window_manager.invoke_popup(self, width=240)
 
 
 class BA_OT_rename_conflict_object(bpy.types.Operator):

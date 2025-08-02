@@ -4,12 +4,12 @@ from bpy.app.handlers import persistent
 
 
 bl_info = {
-    "name": "Backup Assistant",
+    "name": "Moonbox Backup",
     "author": "Canta Tam",
     "version": (1, 0),
     "blender": (3, 6, 0),
     "location": "View3D",
-    "description": "妈妈再也不怕我误删文件了",
+    "description": "大话西游同款插件，至尊宝也想要",
     "category": "3D View",
     "doc_url": "https://www.bilibili.com/video/BV12q4y1t7h9/?spm_id_from=333.1387.upload.video_card.click&vd_source=e4cbc5ec88a2d9cfc7450c34eb007abe", 
     "support": "COMMUNITY"
@@ -41,7 +41,9 @@ from .handler_repeat_origin import (
 from .func_auto_backup import auto_backup
 from .delete_backup import (
     BA_OT_delete_backup,
-    BA_OT_del_name_conflict_duplicate,
+    BA_OT_del_name_conflict_backup,
+    BA_OT_delete_all_backup,
+    BA_OT_delete_leftover_backup,
 )
 from .restore_backup import BA_OT_restore_backup
 from .show_hide_backup import (
@@ -62,7 +64,7 @@ from .preview_backup_sidebar import (
     BA_OT_right_backup,
 )
 
-from .open_web import BAK_OT_open_website
+from .open_web import BAK_OT_open_bilibili
 
 from .realtime_preview_backup import BA_OT_backup_snapshot_modal
 
@@ -115,7 +117,9 @@ def register():
     bpy.utils.register_class(BA_OT_remove_self_uuid)
     bpy.utils.register_class(BA_OT_handle_conflict_name)
     bpy.utils.register_class(BA_OT_rename_conflict_object)
-    bpy.utils.register_class(BA_OT_del_name_conflict_duplicate)
+    bpy.utils.register_class(BA_OT_del_name_conflict_backup)
+    bpy.utils.register_class(BA_OT_delete_all_backup)
+    bpy.utils.register_class(BA_OT_delete_leftover_backup)
     bpy.app.handlers.load_post.append(auto_backup_on_load)
     bpy.utils.register_class(BA_OT_delete_backup)
     bpy.utils.register_class(BA_OT_restore_backup)
@@ -134,7 +138,7 @@ def register():
     bpy.utils.register_class(BA_OT_right_backup)
     register_keymaps()
 
-    bpy.utils.register_class(BAK_OT_open_website)
+    bpy.utils.register_class(BAK_OT_open_bilibili)
     
 
 
@@ -142,7 +146,7 @@ def register():
 
 def unregister():
     
-    bpy.utils.unregister_class(BAK_OT_open_website)
+    bpy.utils.unregister_class(BAK_OT_open_bilibili)
 
     unregister_keymaps()
     bpy.utils.unregister_class(BA_OT_right_backup)
@@ -161,7 +165,9 @@ def unregister():
     bpy.utils.unregister_class(BA_OT_restore_backup)
     bpy.utils.unregister_class(BA_OT_delete_backup)
     bpy.app.handlers.load_post.remove(auto_backup_on_load)
-    bpy.utils.unregister_class(BA_OT_del_name_conflict_duplicate)
+    bpy.utils.unregister_class(BA_OT_delete_leftover_backup)
+    bpy.utils.unregister_class(BA_OT_delete_all_backup)
+    bpy.utils.unregister_class(BA_OT_del_name_conflict_backup)
     bpy.utils.unregister_class(BA_OT_rename_conflict_object)
     bpy.utils.unregister_class(BA_OT_handle_conflict_name)
     bpy.utils.unregister_class(BA_OT_remove_self_uuid)

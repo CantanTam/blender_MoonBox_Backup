@@ -30,15 +30,6 @@ class BA_OT_preference(bpy.types.AddonPreferences):
         soft_max=5,
     )
 
-    backup_mode: bpy.props.EnumProperty(
-        name="",
-        items=[
-            ('OVERWRITE',   "覆盖备份", "用当前状态覆盖原备份"),
-            ('INCREASE', "增量备份", "只保存更改的部分"),
-        ],
-        default='INCREASE',
-)
-
     right_click_backup:bpy.props.BoolProperty(
         name="",
         description="开启后，右键菜单会出现备份菜单选项",
@@ -57,7 +48,7 @@ class BA_OT_preference(bpy.types.AddonPreferences):
         default=False,
     )
 
-    backup_list_style:bpy.props.BoolProperty(
+    list_leftover_backup:bpy.props.BoolProperty(
         name="",
         description="在大纲头栏显示备份列出类型",
         default=True,
@@ -72,7 +63,7 @@ class BA_OT_preference(bpy.types.AddonPreferences):
         
     )
 
-    detect_rename_interval:bpy.props.FloatProperty(
+    detect_change_interval:bpy.props.FloatProperty(
         name="",
         description="后台检测重命名、添加、删除状态变化的时间间隔，单位为秒",
         default=1.0,
@@ -82,68 +73,4 @@ class BA_OT_preference(bpy.types.AddonPreferences):
         precision=1,
     )
 
-    color_prop: bpy.props.FloatVectorProperty(
-        name="",
-        subtype='COLOR',
-        default=(1.0, 0.5, 0.0),
-        min=0.0,
-        max=1.0,
-        description="选择一个颜色"
-    )
 
-    def draw(self, context):
-        layout = self.layout
-
-        split = layout.split(factor=0.2)
-        col_left = split.column()
-        col_left.alignment = 'LEFT'
-        col_right = split.column()
-
-        col_left.label(text="自动备份")
-        col_right.prop(self, "use_auto_backup")
-
-        if self.use_auto_backup:
-            split = layout.split(factor=0.2)
-            col_left = split.column()
-            col_right = split.column()
-
-            col_left.label(text="备份间隔")
-            col_right.prop(self, "auto_backup_interval")
-
-        split = layout.split(factor=0.2)
-        col_left = split.column()
-        col_right = split.column()
-
-        col_left.label(text="备份后缀")
-        row = col_right.row(align=True)
-        row.prop(self, "custom_suffix", text="")  # 属性不重复 label
-        row.operator("wm.start_backup", text="", icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
-
-        split = layout.split(factor=0.2)
-        col_left = split.column()
-        col_right = split.column()
-
-        col_left.label(text="右键备份")
-        col_right.prop(self, "right_click_backup")
-
-        split = layout.split(factor=0.2)
-        col_left = split.column()
-        col_right = split.column()
-
-        col_left.label(text="副本数量")
-        col_right.prop(self, "backup_copies_count")
-
-        split = layout.split(factor=0.2)
-        col_left = split.column()
-        col_right = split.column()
-
-        col_left.label(text="检测间隔")
-        col_right.prop(self, "detect_rename_interval")
-
-        split = layout.split(factor=0.2)
-        col_left = split.column()
-        col_right = split.column()
-
-        col_left.label(text="颜色选择")
-        col_right.enabled = True
-        col_right.prop(self, "color_prop")

@@ -4,30 +4,8 @@ from . import ADDON_NAME
 from .func_remove_unlinked import remove_all_unlinked
 from .func_list_backup import list_all_backup,list_backup_with_origin
 from .progress_notice import progress_notice
+from .func_get_view3d_override import get_view3d_override_for_active_object
 
-# 大纲视窗调用恢复，需要回到view3d 获取宽度显示恢复提示
-def get_view3d_override_for_active_object(context):
-    active_obj = context.active_object
-    wm = context.window_manager
-
-    for window in wm.windows:
-        screen = window.screen
-        for area in screen.areas:
-            if area.type == 'VIEW_3D':
-                # 这里可以根据需要精细匹配物体是否显示在该区域
-                for region in area.regions:
-                    if region.type == 'WINDOW':
-                        override = {
-                            "window": window,
-                            "screen": screen,
-                            "area": area,
-                            "region": region,
-                            "scene": context.scene,
-                            "blend_data": bpy.data,
-                            "object": active_obj,
-                        }
-                        return override
-    return None
 
 class BA_OT_restore_backup(bpy.types.Operator):
     bl_idname = "bak.restore_backup"
@@ -137,7 +115,6 @@ class BA_OT_restore_backup(bpy.types.Operator):
             with bpy.context.temp_override(**override):
                 progress_notice("RESTORE.png")
         else:
-            # 兜底，直接调用（如果找不到3D视图）
             progress_notice("RESTORE.png")
 
         return {'FINISHED'}

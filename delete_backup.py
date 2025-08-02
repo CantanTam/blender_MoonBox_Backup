@@ -3,6 +3,7 @@ import os
 from . import ADDON_NAME
 from .func_remove_unlinked import remove_all_unlinked
 from .progress_notice import progress_notice
+from .func_get_view3d_override import get_view3d_override_for_active_object
 
 class BA_OT_delete_backup(bpy.types.Operator):
     bl_idname = "bak.delete_backup"
@@ -19,7 +20,8 @@ class BA_OT_delete_backup(bpy.types.Operator):
 
     def execute(self, context):
         delete_objects_uuid = bpy.context.active_object.ba_data.object_uuid
-
+        
+        delete_count = 0
         snapshot_dir = os.path.join(os.path.dirname(__file__), "backup_snapshots")
 
         for item in bpy.data.objects:
@@ -31,17 +33,26 @@ class BA_OT_delete_backup(bpy.types.Operator):
                 
                 bpy.data.objects.remove(item, do_unlink=True)
 
+                delete_count += 1
 
         bpy.context.active_object.ba_data.object_uuid = ""
 
         remove_all_unlinked()
 
-        progress_notice("DELETE.png")
+        self.report({'WARNING'},f"已删除\"{context.active_object.name}\"{delete_count}个备份")   
+        
+        override = get_view3d_override_for_active_object(context)
 
+        if override is not None:
+            with bpy.context.temp_override(**override):
+                progress_notice("DELETE.png")
+        else:
+            progress_notice("DELETE.png")
+        
         return {'FINISHED'}
     
-class BA_OT_del_name_conflict_duplicate(bpy.types.Operator):
-    bl_idname = "bak.del_name_conflict_duplicate"
+class BA_OT_del_name_conflict_backup(bpy.types.Operator):
+    bl_idname = "bak.del_name_conflict_backup"
     bl_label = "删除名字冲突备份"
     bl_description = "删除与原件名字冲突的残留备件"
     bl_options = {'REGISTER', 'UNDO'}
@@ -73,12 +84,104 @@ class BA_OT_del_name_conflict_duplicate(bpy.types.Operator):
 
                 delete_count += 1
 
+        remove_all_unlinked()
+
+        context.preferences.addons[ADDON_NAME].preferences.use_auto_backup = auto_backup_statu
+        
         self.report({'WARNING'},f"删除{delete_count}个与\"{current_object.name}\"名字冲突的残留备份")                
+        
+        override = get_view3d_override_for_active_object(context)
+
+        if override is not None:
+            with bpy.context.temp_override(**override):
+                progress_notice("DELETE.png")
+        else:
+            progress_notice("DELETE.png")
+
+        return {'FINISHED'}
+    
+class BA_OT_delete_all_backup(bpy.types.Operator):
+    bl_idname = "bak.delete_all_backup"
+    bl_label = "删除所有备份"
+    bl_description = "删除所有备份"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        auto_backup_statu = context.preferences.addons[ADDON_NAME].preferences.use_auto_backup
+        context.preferences.addons[ADDON_NAME].preferences.use_auto_backup = False
+
+        delete_count = 0
+        snapshot_dir = os.path.join(os.path.dirname(__file__), "backup_snapshots")
+
+        for item in bpy.data.objects:
+            if item.ba_data.object_type == "DUPLICATE":
+
+                if os.path.exists(os.path.join(snapshot_dir, item.ba_data.object_uuid + "_" + item.ba_data.backup_uuid + ".jpg")):
+                    os.remove(os.path.join(snapshot_dir, item.ba_data.object_uuid + "_" + item.ba_data.backup_uuid + ".jpg"))
+                
+                bpy.data.objects.remove(item, do_unlink=True)
+
+                delete_count += 1
+
+        remove_all_unlinked()
+
+        context.preferences.addons[ADDON_NAME].preferences.use_auto_backup = auto_backup_statu
+        
+        self.report({'WARNING'},f"已删除所有备份，总数为{delete_count}")   
+        
+        override = get_view3d_override_for_active_object(context)
+
+        if override is not None:
+            with bpy.context.temp_override(**override):
+                progress_notice("DELETE.png")
+        else:
+            progress_notice("DELETE.png")
+
+        return {'FINISHED'}
+    
+class BA_OT_delete_leftover_backup(bpy.types.Operator):
+    bl_idname = "bak.delete_leftover_backup"
+    bl_label = "删除所有残留备份"
+    bl_description = "删除所有原文件已经被删除的备份"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        auto_backup_statu = context.preferences.addons[ADDON_NAME].preferences.use_auto_backup
+        context.preferences.addons[ADDON_NAME].preferences.use_auto_backup = False
+
+        bpy.ops.object.select_all(action='DESELECT')
+
+        delete_count = 0
+        snapshot_dir = os.path.join(os.path.dirname(__file__), "backup_snapshots")
+
+        origin_object_uuids = {
+            item.ba_data.object_uuid
+            for item in bpy.data.objects
+            if item.ba_data.object_type == "ORIGIN"
+        }
+
+        for item in bpy.data.objects:
+            if item.ba_data.object_type == "DUPLICATE" and item.ba_data.object_uuid not in origin_object_uuids:
+
+                if os.path.exists(os.path.join(snapshot_dir, item.ba_data.object_uuid + "_" + item.ba_data.backup_uuid + ".jpg")):
+                    os.remove(os.path.join(snapshot_dir, item.ba_data.object_uuid + "_" + item.ba_data.backup_uuid + ".jpg"))
+                
+                bpy.data.objects.remove(item, do_unlink=True)
+
+                delete_count += 1
+
+        self.report({'WARNING'},f"已删除所有残余备份，总数为{delete_count}")                
         
         remove_all_unlinked()
 
         context.preferences.addons[ADDON_NAME].preferences.use_auto_backup = auto_backup_statu
 
-        progress_notice("DELETE.png")
+        override = get_view3d_override_for_active_object(context)
+
+        if override is not None:
+            with bpy.context.temp_override(**override):
+                progress_notice("DELETE.png")
+        else:
+            progress_notice("DELETE.png")
 
         return {'FINISHED'}

@@ -2,8 +2,8 @@ import bpy
 import webbrowser
 
 
-class BAK_OT_open_website(bpy.types.Operator):
-    bl_idname = "bak.open_website"
+class BAK_OT_open_bilibili(bpy.types.Operator):
+    bl_idname = "bak.open_bilibili"
     bl_label = "打开官方网站"
     bl_description = "点击后打开指定网址"
     
