@@ -10,9 +10,6 @@ is_snapshot_loaded = False
 backup_snapshot_dict = {}
 backup_snapshot_reverse_dict = {}
 
-# left right 按钮共用计数
-left_right_arrow_shared_count = 0
-
 def load_backup_snapshots():
     global backup_snapshot_dict
     global backup_snapshot_reverse_dict

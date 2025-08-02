@@ -39,12 +39,19 @@ class BA_OT_start_backup(bpy.types.Operator):
 
         # 检测是否有相同 uuid 的原件
         if origin_object.ba_data.object_uuid == "":
-            origin_object.ba_data.object_uuid = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+            if any(item.ba_data.object_type == "DUPLICATE" 
+                and item.ba_data.object_uuid not in origin_object_uuids 
+                and item.name.split(item.ba_data.backup_infix)[0] == origin_object.name
+                for item in bpy.data.objects):
+                bpy.ops.bak.handler_conflict_name('INVOKE_DEFAULT')
+                return {'FINISHED'}
+            else:
+                origin_object.ba_data.object_uuid = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
         
         elif origin_object != "" and origin_object_uuids.count(origin_object.ba_data.object_uuid) > 1:
             bpy.ops.bak.handler_repeat_uuid('INVOKE_DEFAULT')
             return {'FINISHED'}
-            
+                    
         list_all_backup()
 
         sync_origin_backup_name()

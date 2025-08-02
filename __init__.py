@@ -37,6 +37,7 @@ from .handler_repeat_origin import (
     BA_OT_remove_self_uuid,
     BA_OT_handle_conflict_name,
     BA_OT_rename_conflict_object,
+    BA_OT_del_name_conflict_duplicate,
 )
 from .func_auto_backup import auto_backup
 from .delete_backup import BA_OT_delete_backup
@@ -112,6 +113,7 @@ def register():
     bpy.utils.register_class(BA_OT_remove_self_uuid)
     bpy.utils.register_class(BA_OT_handle_conflict_name)
     bpy.utils.register_class(BA_OT_rename_conflict_object)
+    bpy.utils.register_class(BA_OT_del_name_conflict_duplicate)
     bpy.app.handlers.load_post.append(auto_backup_on_load)
     bpy.utils.register_class(BA_OT_delete_backup)
     bpy.utils.register_class(BA_OT_restore_backup)
@@ -157,6 +159,7 @@ def unregister():
     bpy.utils.unregister_class(BA_OT_restore_backup)
     bpy.utils.unregister_class(BA_OT_delete_backup)
     bpy.app.handlers.load_post.remove(auto_backup_on_load)
+    bpy.utils.unregister_class(BA_OT_del_name_conflict_duplicate)
     bpy.utils.unregister_class(BA_OT_rename_conflict_object)
     bpy.utils.unregister_class(BA_OT_handle_conflict_name)
     bpy.utils.unregister_class(BA_OT_remove_self_uuid)
