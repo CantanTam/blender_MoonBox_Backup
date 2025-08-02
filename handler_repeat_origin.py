@@ -66,10 +66,10 @@ class BA_OT_handle_conflict_name(bpy.types.Operator):
     def draw(self, context):
         layout = self.layout
         layout.label(text="当前文件与残留备份文件名字冲突", icon="ERROR")
-        
-        row = layout.row()
-        row.operator("bak.rename_conflict_object", text="重命名物体", icon="GREASEPENCIL")
-        row.operator("bak.del_name_conflict_duplicate", text="清除名字冲突备份件", icon="GREASEPENCIL")
+
+        split = layout.split(factor=0.4)        
+        split.operator("bak.rename_conflict_object", text="重命名物体", icon="GREASEPENCIL")
+        split.operator("bak.del_name_conflict_duplicate", text="清除名字冲突备份件", icon="TRASH")
 
     def invoke(self, context, event):
         return context.window_manager.invoke_popup(self, width=250)
