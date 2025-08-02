@@ -1,7 +1,4 @@
 import bpy
-from . import ADDON_NAME
-from .func_list_backup import list_backup_without_origin,list_backup_with_origin
-from .preview_backup_sidebar import to_stop_sidbar
 
 class BA_OT_handle_repeat_uuid(bpy.types.Operator):
     bl_idname = "bak.handler_repeat_uuid"
@@ -83,69 +80,5 @@ class BA_OT_rename_conflict_object(bpy.types.Operator):
 
     def execute(self, context):
         bpy.ops.wm.call_panel(name="TOPBAR_PT_name", keep_open=False)
-
-        return {'FINISHED'}
-    
-class BA_OT_del_name_conflict_duplicate(bpy.types.Operator):
-    bl_idname = "bak.del_name_conflict_duplicate"
-    bl_label = "删除名字冲突备份"
-    bl_description = "删除与原件名字冲突的残留备件"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    def execute(self, context):
-        bpy.data.collections["BACKUP"].hide_viewport = False
-        bpy.data.collections["BACKUP"].hide_render = False
-        bpy.context.view_layer.layer_collection.children['BACKUP'].hide_viewport = False
-        
-        auto_backup_statu = context.preferences.addons[ADDON_NAME].preferences.use_auto_backup
-        context.preferences.addons[ADDON_NAME].preferences.use_auto_backup = False
-
-        global to_stop_sidbar
-        to_stop_sidbar = True
-
-        list_backup_without_origin()
-
-        current_object = context.active_object
-
-        backup_uuids = {
-            item.ba_data.object_uuid
-            for item in bpy.data.objects
-            if item.ba_data.object_type == "ORIGIN"
-        }
-
-        delete_count = 0
-
-        backup_to_delete = {
-            item
-            for item in bpy.data.objects
-            if item.ba_data.object_type == "DUPLICATE"
-            and item.name.split(item.ba_data.backup_infix)[0] == current_object.name
-            and item.ba_data.object_uuid not in backup_uuids
-        }
-        
-        for item in backup_to_delete:
-
-            bpy.ops.object.select_all(action='DESELECT')
-            item.select_set(True)
-            bpy.context.view_layer.objects.active = item
-            bpy.ops.object.delete()
-
-            delete_count += 1
-
-        bpy.ops.object.select_all(action='DESELECT')
-        current_object.select_set(True)
-        bpy.context.view_layer.objects.active = current_object
-
-        context.preferences.addons[ADDON_NAME].preferences.use_auto_backup = auto_backup_statu
-
-        bpy.data.collections["BACKUP"].hide_viewport = True
-        bpy.data.collections["BACKUP"].hide_render = True
-        bpy.context.view_layer.layer_collection.children['BACKUP'].hide_viewport = True
-
-        to_stop_sidbar = False
-
-        list_backup_with_origin()
-
-        self.report({'WARNING'},f"删除{delete_count}个与\"{current_object.name}\"名字冲突的残留备份")                
 
         return {'FINISHED'}

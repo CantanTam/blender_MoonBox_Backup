@@ -37,10 +37,12 @@ from .handler_repeat_origin import (
     BA_OT_remove_self_uuid,
     BA_OT_handle_conflict_name,
     BA_OT_rename_conflict_object,
-    BA_OT_del_name_conflict_duplicate,
 )
 from .func_auto_backup import auto_backup
-from .delete_backup import BA_OT_delete_backup
+from .delete_backup import (
+    BA_OT_delete_backup,
+    BA_OT_del_name_conflict_duplicate,
+)
 from .restore_backup import BA_OT_restore_backup
 from .show_hide_backup import (
     BA_OT_show_backup,
