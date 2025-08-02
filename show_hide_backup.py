@@ -29,7 +29,7 @@ class BA_OT_show_backup(bpy.types.Operator):
 class BA_OT_show_backup_without_origin(bpy.types.Operator):
     bl_idname = "wm.show_backup_withou_origin"
     bl_label = "列出无原件备份"
-    bl_description = "列出全部"
+    bl_description = "列出全部所有原文件已经被删除的备份文件"
     bl_options = {'REGISTER', 'UNDO'}
 
     @classmethod

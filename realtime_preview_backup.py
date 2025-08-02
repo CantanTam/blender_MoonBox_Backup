@@ -251,5 +251,9 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
             context.preferences.addons[ADDON_NAME].preferences.use_auto_backup = self.auto_backup_statu
 
             return {'CANCELLED'}
+        
+        if event.type in {'WHEELDOWNMOUSE', 'WHEELUPMOUSE'} and event.ctrl == True and is_mouse_in_view3d(context, event):
+            # 这里的意思其实就是如果是 ctrl + ↑ / ↓ 就继续 modal 操作，相当于阻断其它也使用 ctrl ↑的快捷键的使用
+            return {'RUNNING_MODAL'}
 
         return {'PASS_THROUGH'}
