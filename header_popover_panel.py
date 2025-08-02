@@ -42,7 +42,7 @@ class BA_PT_backup_setting(bpy.types.Panel):
         col_left.label(text="自动备份")
         row = col_right.row(align=True)
         row.prop(prefs, "auto_backup_interval")
-        row.prop(prefs, "use_auto_backup",icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id, text="")
+        row.prop(prefs, "use_auto_backup",icon_value=load_custom_icons.custom_icons["AUTOBACKUP"].icon_id, text="")
 
         box = layout.box()
         row = box.row()

@@ -12,13 +12,13 @@ def draw_outliner_header_button(self, context):
     prefs = context.preferences.addons[ADDON_NAME].preferences
 
     if context.area.type == 'OUTLINER':
-        row.operator("wm.start_backup", text="", icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id)
+        row.operator("wm.start_backup", text="", icon_value=load_custom_icons.custom_icons["BACKUP"].icon_id)
 
         if prefs.show_auto_backup:
-            row.prop(prefs, "use_auto_backup",icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
+            row.prop(prefs, "use_auto_backup",icon_value=load_custom_icons.custom_icons["AUTOBACKUP"].icon_id)
             
         if prefs.list_leftover_backup:
-            row.operator("wm.show_backup_withou_origin",icon_value=load_custom_icons.custom_icons["PREVIEW_ON"].icon_id, text="")
+            row.operator("wm.show_backup_withou_origin",icon_value=load_custom_icons.custom_icons["LEFTOVER"].icon_id, text="")
     
         row.popover(panel="bak.backup_setting", text="")
 
@@ -32,7 +32,7 @@ def draw_list_unlist_backup(self, context):
         layout.operator(
             "bak.unlist_from_backup",
             text=f"{select_objects[0].name}移出备份列表" if is_in_backup_list() == 1 else "全部移出备份列表" ,
-            icon="RESTRICT_SELECT_ON",
+            icon_value=load_custom_icons.custom_icons["UNLIST"].icon_id,
             )
         
     if is_in_backup_list() in {2,4}:
@@ -41,14 +41,14 @@ def draw_list_unlist_backup(self, context):
         layout.operator(
             "bak.list_to_backup",
             text=f"{select_objects[0].name}移入备份列表" if is_in_backup_list() == 2 else "全部移入备份列表" ,
-            icon="RESTRICT_SELECT_OFF",
+            icon_value=load_custom_icons.custom_icons["LIST"].icon_id,
             )
         
     if is_in_backup_list() == 5:
         layout = self.layout
         layout.separator()
-        layout.operator("bak.list_to_backup",text="全部移入备份列表",icon="RESTRICT_SELECT_OFF")
-        layout.operator("bak.unlist_from_backup",text="全部移出备份列表",icon="RESTRICT_SELECT_ON")
+        layout.operator("bak.list_to_backup",text="全部移入备份列表",icon_value=load_custom_icons.custom_icons["LIST"].icon_id)
+        layout.operator("bak.unlist_from_backup",text="全部移出备份列表",icon_value=load_custom_icons.custom_icons["UNLIST"].icon_id)
 
 
 def draw_start_backup(self, context):
@@ -56,15 +56,13 @@ def draw_start_backup(self, context):
         return
     
     layout = self.layout
-    # 测试备份 snapshot 功能
-    layout.operator("wm.test_preview_snapshot", text="测试SnapShot功能", icon="HIDE_OFF")
     if bpy.context.mode == 'OBJECT' and bpy.context.selected_objects:
 
         layout.separator()
         layout.operator(
             "wm.start_backup", 
             text=f"备份\"{bpy.context.active_object.name}\"", 
-            icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id,
+            icon_value=load_custom_icons.custom_icons["BACKUP"].icon_id,
             ),
             
         
@@ -76,7 +74,7 @@ def draw_start_backup(self, context):
             layout.operator(
                 "wm.start_backup", 
                 text=f"备份\"{bpy.context.active_object.name}\"", 
-                icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id,
+                icon_value=load_custom_icons.custom_icons["BACKUP"].icon_id,
                 )
 
 def draw_outliner_delete_backup(self, context):
@@ -85,7 +83,7 @@ def draw_outliner_delete_backup(self, context):
         layout = self.layout
         layout.separator()
         layout.operator_context = 'INVOKE_DEFAULT'
-        layout.operator("bak.delete_backup", text=f"删除{context.active_object.name}的所有备份", icon_value=load_custom_icons.custom_icons["INCREASE_BACKUP"].icon_id)
+        layout.operator("bak.delete_backup", text=f"删除{context.active_object.name}的所有备份", icon_value=load_custom_icons.custom_icons["DELETE"].icon_id)
 
 def draw_outliner_rerestore_backup(self, context):
     if bpy.context.active_object.ba_data.object_type == "DUPLICATE":
@@ -93,7 +91,7 @@ def draw_outliner_rerestore_backup(self, context):
         layout = self.layout
         layout.separator()
         layout.operator_context = 'INVOKE_DEFAULT'
-        layout.operator("bak.restore_backup", text="恢复备份", icon_value=load_custom_icons.custom_icons["OVERWRITE_BACKUP"].icon_id)
+        layout.operator("bak.restore_backup", text="恢复备份", icon_value=load_custom_icons.custom_icons["RESTORE"].icon_id)
 
 
 
