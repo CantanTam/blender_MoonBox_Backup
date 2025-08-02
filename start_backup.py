@@ -37,7 +37,7 @@ class BA_OT_start_backup(bpy.types.Operator):
             for item in bpy.data.objects 
             if item.ba_data.object_type == 'ORIGIN']
 
-        # 检测是否有相同 uuid 的原件
+        # 检测是否有相同 uuid 的原件或者新建原件与残留备份冲突
         if origin_object.ba_data.object_uuid == "":
             if any(item.ba_data.object_type == "DUPLICATE" 
                 and item.ba_data.object_uuid not in origin_object_uuids 

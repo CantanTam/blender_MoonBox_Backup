@@ -10,6 +10,9 @@ is_snapshot_loaded = False
 backup_snapshot_dict = {}
 backup_snapshot_reverse_dict = {}
 
+#定义一个变量在进行删除操作的时候，阻止 sidebar preview
+to_stop_sidbar = False
+
 def load_backup_snapshots():
     global backup_snapshot_dict
     global backup_snapshot_reverse_dict
@@ -74,6 +77,9 @@ class BA_PT_backup_snapshot_sidebar(bpy.types.Panel):
         current_snapshot = current_backup.ba_data.object_uuid + "_" + current_backup.ba_data.backup_uuid
 
         layout = self.layout
+        if to_stop_sidbar is True:
+            return
+
         if context.active_object.ba_data.object_uuid == "" or modal.realtime_preview_statu:
             return
         
