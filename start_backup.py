@@ -32,19 +32,18 @@ class BA_OT_start_backup(bpy.types.Operator):
         origin_edit_mode = context.object.mode
         origin_object = context.active_object
 
+        origin_object_uuids = [
+            item.ba_data.object_uuid
+            for item in bpy.data.objects 
+            if item.ba_data.object_type == 'ORIGIN']
+
         # 检测是否有相同 uuid 的原件
         if origin_object.ba_data.object_uuid == "":
             origin_object.ba_data.object_uuid = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
         
-        else:
-            origin_object_uuids = [
-                item.ba_data.object_uuid
-                for item in bpy.data.objects 
-                if item.ba_data.object_type == 'ORIGIN']
-            
-            if origin_object_uuids.count(origin_object.ba_data.object_uuid) > 1:
-                bpy.ops.bak.handler_repeat_uuid('INVOKE_DEFAULT')
-                return {'FINISHED'}
+        elif origin_object != "" and origin_object_uuids.count(origin_object.ba_data.object_uuid) > 1:
+            bpy.ops.bak.handler_repeat_uuid('INVOKE_DEFAULT')
+            return {'FINISHED'}
             
         list_all_backup()
 
