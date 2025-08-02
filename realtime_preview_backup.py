@@ -7,7 +7,24 @@ from .func_list_backup import list_all_backup,list_backup_with_origin
 from .func_remove_unlinked import remove_all_unlinked
 from .progress_notice import progress_notice
 
+# 使用实时预览需要关闭侧边栏
 realtime_preview_statu = False
+
+# 判定鼠标是否在 view3d 视窗内
+def is_mouse_in_view3d(context, event):
+    x, y = event.mouse_x, event.mouse_y  # 窗口级别坐标
+    for area in context.window.screen.areas:
+        if area.type == 'VIEW_3D':
+            for region in area.regions:
+                if region.type == 'WINDOW':
+                    # 区域坐标范围
+                    rx = region.x
+                    ry = region.y
+                    rw = region.width
+                    rh = region.height
+                    if rx <= x <= rx + rw and ry <= y <= ry + rh:
+                        return True
+    return False
 
 class BA_OT_backup_snapshot_modal(bpy.types.Operator):
     bl_idname = "view3d.backup_snapshot_modal"
@@ -102,7 +119,7 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
         global realtime_preview_statu
         context.area.tag_redraw()
 
-        if event.type == 'LEFTMOUSE' and event.ctrl == True:
+        if event.type == 'LEFTMOUSE' and event.ctrl == True and is_mouse_in_view3d(context, event):
             if context.active_object != self.realtime_previews[self.preview_count]:
                 bpy.ops.object.mode_set(mode='OBJECT')
 
@@ -168,7 +185,7 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
 
                 return {'FINISHED'}
 
-        if event.type == 'WHEELUPMOUSE' and event.ctrl == True:
+        if event.type == 'WHEELUPMOUSE' and event.ctrl == True and is_mouse_in_view3d(context, event):
             self.current_object_index -= 1
 
             if self.current_object_index < 1:
@@ -191,7 +208,7 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
 
             bpy.ops.object.mode_set(mode=self.current_edit_mode)
 
-        if event.type == 'WHEELDOWNMOUSE' and event.ctrl == True:
+        if event.type == 'WHEELDOWNMOUSE' and event.ctrl == True and is_mouse_in_view3d(context, event):
             self.current_object_index += 1
 
             if self.current_object_index > self.preview_count:
@@ -211,7 +228,7 @@ class BA_OT_backup_snapshot_modal(bpy.types.Operator):
 
             bpy.ops.object.mode_set(mode=self.current_edit_mode)
 
-        if event.type in {'RIGHTMOUSE','ESC'}:
+        if event.type in {'RIGHTMOUSE','ESC'} and is_mouse_in_view3d(context, event):
             bpy.ops.object.mode_set(mode='OBJECT')
 
             for index,object in self.realtime_previews.items():
