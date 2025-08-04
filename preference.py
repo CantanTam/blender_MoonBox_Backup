@@ -57,6 +57,7 @@ class BA_OT_preference(bpy.types.AddonPreferences):
         name="",
         description="自动备份的时间间隔，单位为分钟",
         default=5,
+        min=1,
         precision=1,
         subtype='TIME',
         
