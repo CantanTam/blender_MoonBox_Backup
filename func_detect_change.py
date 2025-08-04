@@ -9,28 +9,24 @@ def is_edit_change():
         return False
     
     temp_matrix_hash = str(hash(tuple(round(v,6) for row in current_object.matrix_world for v in row)))
-    if current_object.ba_data.matrix_hash != temp_matrix_hash:
-        current_object.ba_data.matrix_hash = temp_matrix_hash
-        return True
         
-    temp_modifier_count = len(current_object.modifiers)
-    if current_object.ba_data.modifiers_count != temp_modifier_count:
-        current_object.ba_data.modifiers_count = temp_modifier_count
-        return True
+    temp_modifier_count_hash = str(hash(len(current_object.modifiers)))
     
-    if temp_modifier_count != 0:
-        temp_modifier_name_hash = str(hash(tuple(item.name for item in current_object.modifiers)))
-        if current_object.ba_data.modifiers_name_hash != temp_modifier_name_hash:
-            current_object.ba_data.modifiers_name_hash = temp_modifier_name_hash
-            return True
+    temp_modifier_name_hash = str(hash(tuple(item.name for item in current_object.modifiers)))
+
         
     temp_vef_count_hash = str(hash((
                     len(current_object.data.vertices),
                     len(current_object.data.edges),
                     len(current_object.data.polygons),
                     )))
-    if current_object.ba_data.vef_count_hash != temp_vef_count_hash:
-        current_object.ba_data.vef_count_hash = temp_vef_count_hash
+
+    temp_matrix_modifier_vefcount_hash = str(hash(
+        temp_matrix_hash + temp_modifier_count_hash + temp_modifier_name_hash +temp_vef_count_hash
+    ))
+
+    if current_object.ba_data.matrix_modifier_vefcount_hash != temp_matrix_modifier_vefcount_hash:
+        current_object.ba_data.matrix_modifier_vefcount_hash = temp_matrix_modifier_vefcount_hash
         return True
     
     temp_vertex_count = len(current_object.data.vertices)

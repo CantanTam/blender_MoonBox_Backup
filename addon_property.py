@@ -28,8 +28,5 @@ class BA_OB_property(bpy.types.PropertyGroup):
     backup_uuid: bpy.props.StringProperty(default="")
     
     # 通过 形变/修改器数量/修改器名称/点线面总数/点的坐标值 等等的 hash 值变化来判定有没有编辑状态有没有发生改变
-    matrix_hash: bpy.props.StringProperty(default="")
-    modifiers_count: bpy.props.IntProperty(default=0)
-    modifiers_name_hash: bpy.props.StringProperty(default="")
-    vef_count_hash: bpy.props.StringProperty(default="")
+    matrix_modifier_vefcount_hash: bpy.props.StringProperty(default="")
     vertex_position_hash: bpy.props.StringProperty(default="")

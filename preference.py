@@ -55,8 +55,8 @@ class BA_OT_preference(bpy.types.AddonPreferences):
 
     auto_backup_interval:bpy.props.FloatProperty(
         name="",
-        description="自动备份的时间间隔，单位为秒",
-        default=20,
+        description="自动备份的时间间隔，单位为分钟",
+        default=5,
         precision=1,
         subtype='TIME',
         
