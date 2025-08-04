@@ -49,7 +49,7 @@ class BA_OT_preference(bpy.types.AddonPreferences):
 
     list_leftover_backup:bpy.props.BoolProperty(
         name="",
-        description="在大纲头栏显示备份列出类型",
+        description="显示列出所有无原件的残余备份按钮",
         default=True,
     )
 

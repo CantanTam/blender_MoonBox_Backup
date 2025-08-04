@@ -9,7 +9,7 @@ class BAK_OT_open_bilibili(bpy.types.Operator):
     
     url: bpy.props.StringProperty(
         name="URL",
-        default="https://www.blender.org",
+        default="https://www.bilibili.com/video/BV15MtGzCEVr/",
     )
 
     def execute(self, context):
